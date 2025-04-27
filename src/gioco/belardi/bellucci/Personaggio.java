@@ -12,8 +12,19 @@ public class Personaggio {
 	}
 	
 	public double movimentoSu () {
-		
-		
+		return getCoordinataY()+16;
+	}
+	
+	public double movimentoGiu () {
+		return getCoordinataY()-16;
+	}
+	
+	public double movimentoDestra () {
+		return getCoordinataX()+16;
+	}
+	
+	public double movimentoSinistra () {
+		return getCoordinataX()-16;
 	}
 
 	public double getCoordinataX() {
