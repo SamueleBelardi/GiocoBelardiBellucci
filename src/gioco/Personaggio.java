@@ -1,4 +1,4 @@
-package gioco.belardi.bellucci;
+package gioco;
 
 public class Personaggio {
 
