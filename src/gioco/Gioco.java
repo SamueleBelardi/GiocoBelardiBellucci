@@ -10,108 +10,123 @@ import javafx.stage.Stage;
 
 public class Gioco extends Application{
 	
+	/*
+	 * Hai da fa ste cose stronzo (il più possibile) se non capisci qualcosa ho spiegato tutto
+	 * TODO animazione movimento del personaggio
+	 * TODO cambio scenario attraverso collisione in un determinato punto della mappa
+	 * TODO mettere sulla mappa monete da raccogliere "obbiettivo del gioco" che quando ci passa sopra si levano dalla mappa
+	 */
+
+	// bitmap, servono per vedere se il personaggio puo camminare o no su un determinato riquadro
 	Mappa mappaUno = new Mappa("ScenarioUno.txt");
 	Mappa mappaDue = new Mappa("ScenarioDue.txt");
 	Mappa mappaTre = new Mappa("ScenarioTre.txt");
 	Mappa mappaQuattro = new Mappa("ScenarioQuattro.txt");
 	Mappa mappaCinque = new Mappa("ScenarioCinque.txt");
-	double dimensioneXPersonaggio = 200;
-	double dimensioneYPersonaggio = 200;
-	static final double DIMENSIONE_X = 320;
-	static final double DIMENSIONE_Y = 320;
-	static final double DIMENSIONE_X_PERSONAGGIO = 16;
-	static final double DIMENSIONE_Y_PERSONAGGIO = 32;
+	
+	double movimento = 2; 
+	double posizioneXPersonaggio = 200; // posizione X personaggio nella mappa
+	double posizioneYPersonaggio = 210; // posizione Y personaggio nella mappa
+	static final double DIMENSIONE_X = 320; // dimensione X della mappa
+	static final double DIMENSIONE_Y = 320; // dimensione Y della mappa
+	static final double DIMENSIONE_X_PERSONAGGIO = 16; // numero di pixel X (grandezza) del personaggio
+	static final double DIMENSIONE_Y_PERSONAGGIO = 32; // numero di pixel Y (grandezza) del personaggio
+	
+	// immagini degli scenari
 	Image scenarioUno = new Image(getClass().getResourceAsStream("ScenarioUno.png"));
 	Image scenarioDue = new Image(getClass().getResourceAsStream("ScenarioDue.png"));
 	Image scenarioTre = new Image(getClass().getResourceAsStream("ScenarioTre.png"));
 	Image scenarioQuattro = new Image(getClass().getResourceAsStream("ScenarioQuattro.png"));
 	Image scenarioCinque = new Image(getClass().getResourceAsStream("ScenarioCinque.png"));
-	Image protagonista = new Image(getClass().getResourceAsStream("protagonista.png"));
+	
+	// immagini del personaggio quando è in movimento o fermo
+	Image fermoGiu = new Image(getClass().getResourceAsStream("fermoGiu.png"));
+	Image movimentoGiu = new Image(getClass().getResourceAsStream("movimentoGiu.png"));
+	Image fermoDestra = new Image(getClass().getResourceAsStream("fermoDestra.png"));
+	Image movimentoDestra = new Image(getClass().getResourceAsStream("movimentoDestra.png"));
+	Image fermoSu = new Image(getClass().getResourceAsStream("fermoSu.png"));
+	Image movimentoSu = new Image(getClass().getResourceAsStream("movimentoSu.png"));
+	Image fermoSinistra = new Image(getClass().getResourceAsStream("fermoSinistra.png"));
+	Image movimentoSinistra = new Image(getClass().getResourceAsStream("movimentoSinistra.png"));
 	Image moneta = new Image(getClass().getResourceAsStream("moneta.png"));
+	
 	ImageView q1 = new ImageView(scenarioUno);
 	ImageView q2 = new ImageView(scenarioDue);
 	ImageView q3 = new ImageView(scenarioTre);
 	ImageView q4 = new ImageView(scenarioQuattro);
 	ImageView q5 = new ImageView(scenarioCinque);
-	ImageView personaggio1 = new ImageView(protagonista);
+	ImageView personaggio1 = new ImageView(fermoGiu);
 	ImageView obbiettivo = new ImageView(moneta);
+	
+	// pane in cui si aggiungono gli scenari, personaggio, ecc
 	Pane areaDiGioco = new Pane();
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		
+		// aggiunta degli elementi al pane
 		areaDiGioco.getChildren().add(q1);
 		areaDiGioco.getChildren().add(personaggio1);
-		personaggio1.setX(dimensioneXPersonaggio);
-		personaggio1.setY(dimensioneYPersonaggio);
+		personaggio1.setX(posizioneXPersonaggio);
+		personaggio1.setY(posizioneYPersonaggio);
 		
 		Scene scena = new Scene(areaDiGioco);
-		primaryStage.setTitle("QualitaAria");
+		primaryStage.setTitle("Gioco");
 		primaryStage.setScene(scena);
 		primaryStage.show();
 		scena.setOnKeyPressed( e -> tastoPremuto(e));
-		
 	}
 	
-	public boolean puoMuoversi (double dimensioneX, double dimensioneY) {
-		dimensioneX = (dimensioneXPersonaggio / 16) - 1;
-		dimensioneY = (dimensioneYPersonaggio / 16) - 1;
-		boolean puoMuoversi = true;
-		
-		if (mappaUno.getMappa()[(int) dimensioneX][(int) dimensioneY] == '1') {
-			puoMuoversi = false;
-		}
-		return puoMuoversi;
-		
-	}
-
+	// metodo che fa muovore il personaggio quando si preme un determinato tasto
 	private void tastoPremuto(KeyEvent e) {
+		// servono per reimpostara la posizione iniziale in caso di collisone
+		double nuovaX = posizioneXPersonaggio;
+		double nuovaY = posizioneYPersonaggio;
 		
 		// movimento personaggio
-		if(e.getText().equals("w") || e.getText().equals("W")) {
-			dimensioneYPersonaggio -= 10;
+		if(e.getText().toLowerCase().equals("w")) {
+			posizioneYPersonaggio -= movimento;
+			personaggio1.setImage(fermoSu);
 		}
-		if(e.getText().equals("s") || e.getText().equals("S")) {
-			dimensioneYPersonaggio += 10;
+		if(e.getText().toLowerCase().equals("s")) {
+			posizioneYPersonaggio += movimento;
+			personaggio1.setImage(fermoGiu);
 		}
-		if(e.getText().equals("d") || e.getText().equals("D")) {
-			dimensioneXPersonaggio -= 10;
+		if(e.getText().toLowerCase().equals("a")) {
+			posizioneXPersonaggio -= movimento;
+			personaggio1.setImage(fermoSinistra);
 		}
-		if(e.getText().equals("a") || e.getText().equals("A")) {
-			dimensioneXPersonaggio += 10;
+		if(e.getText().toLowerCase().equals("d")) {
+			posizioneXPersonaggio += movimento;
+			personaggio1.setImage(fermoDestra);
 		}
 		
 		// controllo collisioni
-		if(puoMuoversi(dimensioneXPersonaggio, dimensioneYPersonaggio) == false) {
-			if(e.getText().equals("w") || e.getText().equals("W")) {
-				dimensioneYPersonaggio += 10;
-			}
-			if(e.getText().equals("s") || e.getText().equals("S")) {
-				dimensioneYPersonaggio -= 10;
-			}
-			if(e.getText().equals("d") || e.getText().equals("D")) {
-				dimensioneXPersonaggio += 10;
-			}
-			if(e.getText().equals("a") || e.getText().equals("A")) {
-				dimensioneXPersonaggio -= 10;
-			}
-		}
-		// controllo che il personaggio non esce dai bordi
-		if(dimensioneYPersonaggio>DIMENSIONE_Y-DIMENSIONE_Y_PERSONAGGIO) {
-			dimensioneYPersonaggio = DIMENSIONE_Y-DIMENSIONE_Y_PERSONAGGIO;
-		}
-		if(dimensioneXPersonaggio>DIMENSIONE_X-DIMENSIONE_X_PERSONAGGIO) {
-			dimensioneXPersonaggio = DIMENSIONE_X-DIMENSIONE_X_PERSONAGGIO;
-		}
-		if(dimensioneYPersonaggio<0) {
-			dimensioneYPersonaggio = 0;
-		}
-		if(dimensioneXPersonaggio<0) {
-			dimensioneXPersonaggio = 0;
+		if(puoMuoversi(nuovaX, nuovaY)) {
+			posizioneXPersonaggio = nuovaX;
+			posizioneYPersonaggio = nuovaY;
 		}
 		
-		personaggio1.setX(dimensioneXPersonaggio);
-		personaggio1.setY(dimensioneYPersonaggio);
+		// controllo che il personaggio non esce dai bordi
+		if(posizioneYPersonaggio>DIMENSIONE_Y-DIMENSIONE_Y_PERSONAGGIO) posizioneYPersonaggio = DIMENSIONE_Y-DIMENSIONE_Y_PERSONAGGIO;
+		if(posizioneXPersonaggio>DIMENSIONE_X-DIMENSIONE_X_PERSONAGGIO) posizioneXPersonaggio = DIMENSIONE_X-DIMENSIONE_X_PERSONAGGIO;
+		if(posizioneYPersonaggio<0) posizioneYPersonaggio = 0;
+		if(posizioneXPersonaggio<0) posizioneXPersonaggio = 0;
+			
+		// reimposto la posizione del personaggio dopo il movimento
+		personaggio1.setX(posizioneXPersonaggio);
+		personaggio1.setY(posizioneYPersonaggio);
+	}
+	
+	// metodo che controlla dalla bitmap se il personaggio puo stare su quella mattonella
+		public boolean puoMuoversi (double dimensioneX, double dimensioneY) {
+			// calcolo posizione del personaggio nella bitmap
+			int colonna = (int)(posizioneXPersonaggio / 16);
+		    int riga = (int)(posizioneYPersonaggio / 16)+1 ; // quel +1 sta li perché senno non funziona non so manco io perche serve
+			
+		    // assegno ad una variabile il valore presenta in quella detereminata posizione della bitmap
+			char cella = mappaUno.getMappa()[riga][colonna];
+			return cella == '1'; // ritorno true se cella è uguale a 1
 	}
 
 	public static void main(String[] args) {
