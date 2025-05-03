@@ -23,6 +23,7 @@ public class Gioco extends Application{
 	Mappa mappaTre = new Mappa("ScenarioTre.txt");
 	Mappa mappaQuattro = new Mappa("ScenarioQuattro.txt");
 	Mappa mappaCinque = new Mappa("ScenarioCinque.txt");
+	Mappa mappaSelezionata = mappaUno;
 	
 	double movimento = 2; 
 	double posizioneXPersonaggio = 180; // posizione X personaggio nella mappa
@@ -65,7 +66,7 @@ public class Gioco extends Application{
 	public void start(Stage primaryStage) throws Exception {
 		
 		// aggiunta degli elementi al pane
-		areaDiGioco.getChildren().add(q5);
+		areaDiGioco.getChildren().add(q1);
 		areaDiGioco.getChildren().add(personaggio1);
 		personaggio1.setX(posizioneXPersonaggio);
 		personaggio1.setY(posizioneYPersonaggio);
@@ -125,10 +126,29 @@ public class Gioco extends Application{
 		    int riga = (int)(posizioneYPersonaggio / 16)+1 ; // quel +1 sta li perché senno non funziona non so manco io perche serve
 			
 		    // assegno ad una variabile il valore presenta in quella detereminata posizione della bitmap
-			char cella = mappaCinque.getMappa()[riga][colonna];
+			char cella = mappaSelezionata.getMappa()[riga][colonna];
 			System.out.println("Cella [" + riga + "]" + "[" + colonna + "]" + cella);
 			return cella == '1'; // ritorno true se cella è uguale a 1
 	}
+		
+		public void cambioMappa (double dimensioneX, double dimensioneY) {
+			int colonna = (int)(posizioneXPersonaggio / 16);
+		    int riga = (int)(posizioneYPersonaggio / 16)+1 ;
+		    
+		    char cella = mappaSelezionata.getMappa()[riga][colonna];
+		    switch (cella) {
+		    case '2': // spostamento allo ScenarioUno
+		    	areaDiGioco.getChildren().add(q1);
+		    	personaggio1.setX(0);
+		    	personaggio1.setY(0);
+		    	break;
+		    case '3': // spostamento allo scenarioDue
+		    	areaDiGioco.getChildren().add(q2);
+		    	personaggio1.setX(0);
+		    	personaggio1.setY(0);
+		    	break;
+		    }
+		}
 
 	public static void main(String[] args) {
 		launch(args);
