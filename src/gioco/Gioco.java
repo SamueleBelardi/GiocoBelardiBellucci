@@ -25,8 +25,8 @@ public class Gioco extends Application{
 	Mappa mappaCinque = new Mappa("ScenarioCinque.txt");
 	
 	double movimento = 2; 
-	double posizioneXPersonaggio = 200; // posizione X personaggio nella mappa
-	double posizioneYPersonaggio = 210; // posizione Y personaggio nella mappa
+	double posizioneXPersonaggio = 180; // posizione X personaggio nella mappa
+	double posizioneYPersonaggio = 180; // posizione Y personaggio nella mappa
 	static final double DIMENSIONE_X = 320; // dimensione X della mappa
 	static final double DIMENSIONE_Y = 320; // dimensione Y della mappa
 	static final double DIMENSIONE_X_PERSONAGGIO = 16; // numero di pixel X (grandezza) del personaggio
@@ -65,7 +65,7 @@ public class Gioco extends Application{
 	public void start(Stage primaryStage) throws Exception {
 		
 		// aggiunta degli elementi al pane
-		areaDiGioco.getChildren().add(q1);
+		areaDiGioco.getChildren().add(q5);
 		areaDiGioco.getChildren().add(personaggio1);
 		personaggio1.setX(posizioneXPersonaggio);
 		personaggio1.setY(posizioneYPersonaggio);
@@ -125,7 +125,8 @@ public class Gioco extends Application{
 		    int riga = (int)(posizioneYPersonaggio / 16)+1 ; // quel +1 sta li perché senno non funziona non so manco io perche serve
 			
 		    // assegno ad una variabile il valore presenta in quella detereminata posizione della bitmap
-			char cella = mappaUno.getMappa()[riga][colonna];
+			char cella = mappaCinque.getMappa()[riga][colonna];
+			System.out.println("Cella [" + riga + "]" + "[" + colonna + "]" + cella);
 			return cella == '1'; // ritorno true se cella è uguale a 1
 	}
 
