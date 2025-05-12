@@ -66,7 +66,7 @@ public class Gioco extends Application{
 	public void start(Stage primaryStage) throws Exception {
 		
 		// aggiunta degli elementi al pane
-		areaDiGioco.getChildren().add(q1);
+		areaDiGioco.getChildren().add(q5);
 		areaDiGioco.getChildren().add(personaggio1);
 		personaggio1.setX(posizioneXPersonaggio);
 		personaggio1.setY(posizioneYPersonaggio);
@@ -126,7 +126,7 @@ public class Gioco extends Application{
 		    int riga = (int)(posizioneYPersonaggio / 16)+1 ; // quel +1 sta li perché senno non funziona non so manco io perche serve
 			
 		    // assegno ad una variabile il valore presenta in quella detereminata posizione della bitmap
-			char cella = mappaSelezionata.getMappa()[riga][colonna];
+			char cella = mappaCinque.getMappa()[riga][colonna];
 			System.out.println("Cella [" + riga + "]" + "[" + colonna + "]" + cella);
 			return cella == '1'; // ritorno true se cella è uguale a 1
 	}
