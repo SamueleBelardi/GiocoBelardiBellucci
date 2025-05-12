@@ -1,11 +1,14 @@
 package gioco;
 
 import javafx.application.Application;
+import javafx.geometry.BoundingBox;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.Region;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
 public class Gioco extends Application{
@@ -17,6 +20,8 @@ public class Gioco extends Application{
 	 * TODO mettere sulla mappa monete da raccogliere "obbiettivo del gioco" che quando ci passa sopra si levano dalla mappa
 	 */
 
+	
+	
 	// bitmap, servono per vedere se il personaggio puo camminare o no su un determinato riquadro
 	Mappa mappaUno = new Mappa("ScenarioUno.txt");
 	Mappa mappaDue = new Mappa("ScenarioDue.txt");
@@ -32,6 +37,18 @@ public class Gioco extends Application{
 	static final double DIMENSIONE_Y = 320; // dimensione Y della mappa
 	static final double DIMENSIONE_X_PERSONAGGIO = 16; // numero di pixel X (grandezza) del personaggio
 	static final double DIMENSIONE_Y_PERSONAGGIO = 32; // numero di pixel Y (grandezza) del personaggio
+	static final double DIMENSIONE_X_RETTANGOLO = 16;
+	static final double DIMENSIONE_Y_RETTANGOLO = 16;
+	
+	// hitbox per cambio mappa
+	Rectangle hitBoxMappaUnoToDue = new Rectangle(DIMENSIONE_X_RETTANGOLO, DIMENSIONE_Y_RETTANGOLO);
+	Rectangle  hitBoxMappaDueToUno = new Rectangle(DIMENSIONE_X_RETTANGOLO, DIMENSIONE_Y_RETTANGOLO);
+	Rectangle hitBoxMappaDueToTre = new Rectangle(DIMENSIONE_X_RETTANGOLO, DIMENSIONE_Y_RETTANGOLO);
+	Rectangle hitBoxMappaTreToDue = new Rectangle(DIMENSIONE_X_RETTANGOLO, DIMENSIONE_Y_RETTANGOLO);
+	Rectangle  hitBoxMappaTreToQuattro = new Rectangle(DIMENSIONE_X_RETTANGOLO, DIMENSIONE_Y_RETTANGOLO);
+	Rectangle  hitBoxMappaTreToCinque = new Rectangle(DIMENSIONE_X_RETTANGOLO, DIMENSIONE_Y_RETTANGOLO);
+	Rectangle  hitBoxMappaQuattroToTre = new Rectangle(DIMENSIONE_X_RETTANGOLO, DIMENSIONE_Y_RETTANGOLO);
+	Rectangle  hitBoxMappaCinqueToTre = new Rectangle(DIMENSIONE_X_RETTANGOLO, DIMENSIONE_Y_RETTANGOLO); 
 	
 	// immagini degli scenari
 	Image scenarioUno = new Image(getClass().getResourceAsStream("ScenarioUno.png"));
@@ -66,10 +83,12 @@ public class Gioco extends Application{
 	public void start(Stage primaryStage) throws Exception {
 		
 		// aggiunta degli elementi al pane
-		areaDiGioco.getChildren().add(q5);
+		areaDiGioco.getChildren().add(q1);
 		areaDiGioco.getChildren().add(personaggio1);
+		areaDiGioco.getChildren().add(hitBoxMappaUnoToDue);
 		personaggio1.setX(posizioneXPersonaggio);
 		personaggio1.setY(posizioneYPersonaggio);
+		hitBoxMappaUnoToDue.set
 		
 		Scene scena = new Scene(areaDiGioco);
 		primaryStage.setTitle("Gioco");
