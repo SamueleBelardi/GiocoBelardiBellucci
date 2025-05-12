@@ -82,7 +82,7 @@ public class GiocoProva extends Application{
 		animazioneMovimento.play();
 		
 		Scene scena = new Scene(areaDiGioco);
-		primaryStage.setTitle("QualitaAria");
+		primaryStage.setTitle("Gioco");
 		primaryStage.setScene(scena);
 		primaryStage.show();
 		scena.setOnKeyPressed( e -> tastoPremuto(e));
