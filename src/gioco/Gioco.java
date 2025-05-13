@@ -2,12 +2,14 @@ package gioco;
 
 import javafx.application.Application;
 import javafx.geometry.BoundingBox;
+import javafx.geometry.Bounds;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
@@ -41,12 +43,12 @@ public class Gioco extends Application{
 	static final double DIMENSIONE_Y_RETTANGOLO = 16;
 	
 	// hitbox per cambio mappa
-	Rectangle hitBoxMappaUnoToDue = new Rectangle(DIMENSIONE_X_RETTANGOLO, DIMENSIONE_Y_RETTANGOLO);
-	Rectangle  hitBoxMappaDueToUno = new Rectangle(DIMENSIONE_X_RETTANGOLO, DIMENSIONE_Y_RETTANGOLO);
-	Rectangle hitBoxMappaDueToTre = new Rectangle(DIMENSIONE_X_RETTANGOLO, DIMENSIONE_Y_RETTANGOLO);
-	Rectangle hitBoxMappaTreToDue = new Rectangle(DIMENSIONE_X_RETTANGOLO, DIMENSIONE_Y_RETTANGOLO);
-	Rectangle  hitBoxMappaTreToQuattro = new Rectangle(DIMENSIONE_X_RETTANGOLO, DIMENSIONE_Y_RETTANGOLO);
-	Rectangle  hitBoxMappaTreToCinque = new Rectangle(DIMENSIONE_X_RETTANGOLO, DIMENSIONE_Y_RETTANGOLO);
+	Rectangle hitBoxMappaUnoToDue = new Rectangle(16, 16);
+	Rectangle  hitBoxMappaDueToUno = new Rectangle(16, 16);
+	Rectangle hitBoxMappaDueToTre = new Rectangle(48, 16);
+	Rectangle hitBoxMappaTreToDue = new Rectangle(16, 16);
+	Rectangle  hitBoxMappaTreToQuattro = new Rectangle(16, 48);
+	Rectangle  hitBoxMappaTreToCinque = new Rectangle(48, 16);
 	Rectangle  hitBoxMappaQuattroToTre = new Rectangle(DIMENSIONE_X_RETTANGOLO, DIMENSIONE_Y_RETTANGOLO);
 	Rectangle  hitBoxMappaCinqueToTre = new Rectangle(DIMENSIONE_X_RETTANGOLO, DIMENSIONE_Y_RETTANGOLO); 
 	
@@ -76,6 +78,9 @@ public class Gioco extends Application{
 	ImageView personaggio1 = new ImageView(fermoGiu);
 	ImageView obbiettivo = new ImageView(moneta);
 	
+		
+	
+	
 	// pane in cui si aggiungono gli scenari, personaggio, ecc
 	Pane areaDiGioco = new Pane();
 
@@ -85,10 +90,13 @@ public class Gioco extends Application{
 		// aggiunta degli elementi al pane
 		areaDiGioco.getChildren().add(q1);
 		areaDiGioco.getChildren().add(personaggio1);
-		areaDiGioco.getChildren().add(hitBoxMappaUnoToDue);
 		personaggio1.setX(posizioneXPersonaggio);
 		personaggio1.setY(posizioneYPersonaggio);
-		hitBoxMappaUnoToDue.set
+		areaDiGioco.getChildren().add(hitBoxMappaUnoToDue);
+		hitBoxMappaUnoToDue.setX(192);
+		hitBoxMappaUnoToDue.setY(304);
+		hitBoxMappaUnoToDue.setFill(Color.RED);
+		
 		
 		Scene scena = new Scene(areaDiGioco);
 		primaryStage.setTitle("Gioco");
@@ -125,6 +133,8 @@ public class Gioco extends Application{
 		if(puoMuoversi(nuovaX, nuovaY)) {
 			posizioneXPersonaggio = nuovaX;
 			posizioneYPersonaggio = nuovaY;
+			personaggio1.setX(posizioneXPersonaggio);
+	        personaggio1.setY(posizioneYPersonaggio);
 		}
 		
 		// controllo che il personaggio non esce dai bordi
@@ -136,6 +146,8 @@ public class Gioco extends Application{
 		// reimposto la posizione del personaggio dopo il movimento
 		personaggio1.setX(posizioneXPersonaggio);
 		personaggio1.setY(posizioneYPersonaggio);
+		
+		cambioMappa();
 	}
 	
 	// metodo che controlla dalla bitmap se il personaggio puo stare su quella mattonella
@@ -145,29 +157,102 @@ public class Gioco extends Application{
 		    int riga = (int)(posizioneYPersonaggio / 16)+1 ; // quel +1 sta li perché senno non funziona non so manco io perche serve
 			
 		    // assegno ad una variabile il valore presenta in quella detereminata posizione della bitmap
-			char cella = mappaCinque.getMappa()[riga][colonna];
+			char cella = mappaSelezionata.getMappa()[riga][colonna];
 			System.out.println("Cella [" + riga + "]" + "[" + colonna + "]" + cella);
 			return cella == '1'; // ritorno true se cella è uguale a 1
 	}
 		
-		public void cambioMappa (double dimensioneX, double dimensioneY) {
-			int colonna = (int)(posizioneXPersonaggio / 16);
-		    int riga = (int)(posizioneYPersonaggio / 16)+1 ;
+		public void cambioMappa () {
+			
+		    // boundingbox per controllo collisioni
+			Bounds boundPersonaggio = personaggio1.getBoundsInParent();
+			Bounds boundMappaUnoToDue = hitBoxMappaUnoToDue.getBoundsInParent();
+			Bounds boundMappaDueToUno = hitBoxMappaDueToUno.getBoundsInParent();
+			Bounds boundMappaDueToTre = hitBoxMappaDueToTre.getBoundsInParent();
+			Bounds boundMappaTreToDue = hitBoxMappaTreToDue.getBoundsInParent();
+			Bounds boundMappaTreToQuattro = hitBoxMappaTreToQuattro.getBoundsInParent();
+			Bounds boundMappaTreToCinque = hitBoxMappaTreToCinque.getBoundsInParent();
+			Bounds boundMappaQuattroToTre = hitBoxMappaQuattroToTre.getBoundsInParent();
+			Bounds boundMappaCinqueToTre = hitBoxMappaCinqueToTre.getBoundsInParent();	
+
+		    // Da mappaUno a mappaDue
+		    if (boundPersonaggio.intersects(boundMappaUnoToDue)) {
+		        areaDiGioco.getChildren().clear();
+		        areaDiGioco.getChildren().addAll(q2, personaggio1, hitBoxMappaDueToUno, hitBoxMappaDueToTre);
+
+		        // Posizione hitbox per il ritorno a mappaUno
+		        hitBoxMappaDueToUno.setX(192);
+		        hitBoxMappaDueToUno.setY(0);
+		        hitBoxMappaDueToUno.setFill(Color.RED);
+
+		        // Posizione hitbox per il passaggio a mappaTre
+		        hitBoxMappaDueToTre.setX(16);
+		        hitBoxMappaDueToTre.setY(304);
+		        hitBoxMappaDueToTre.setFill(Color.RED);
+
+		        // Cambio la bitmap
+		        mappaSelezionata = mappaDue;
+
+		        // Reimposto la posizione del personaggio nella nuova mappa
+		        posizioneXPersonaggio = 192;
+		        posizioneYPersonaggio = 17;
+		        personaggio1.setX(posizioneXPersonaggio);
+		        personaggio1.setY(posizioneYPersonaggio);
+		    }
+
+		    // Da mappaDue a mappaUno
+		    if (boundPersonaggio.intersects(boundMappaDueToUno)) {
+		        areaDiGioco.getChildren().clear();
+		        areaDiGioco.getChildren().addAll(q1, personaggio1, hitBoxMappaUnoToDue);
+
+		        // Posizione hitbox per il passaggio a mappaDue
+		        hitBoxMappaUnoToDue.setX(192);
+		        hitBoxMappaUnoToDue.setY(304);
+		        hitBoxMappaUnoToDue.setFill(Color.RED);
+
+		        // Cambio la bitmap
+		        mappaSelezionata = mappaUno;
+
+		        // Reimposto la posizione del personaggio nella nuova mappa
+		        posizioneXPersonaggio = 192;
+		        posizioneYPersonaggio = 270;
+		        personaggio1.setX(posizioneXPersonaggio);
+		        personaggio1.setY(posizioneYPersonaggio);
+		    }
 		    
-		    char cella = mappaSelezionata.getMappa()[riga][colonna];
-		    switch (cella) {
-		    case '2': // spostamento allo ScenarioUno
-		    	areaDiGioco.getChildren().add(q1);
-		    	personaggio1.setX(0);
-		    	personaggio1.setY(0);
-		    	break;
-		    case '3': // spostamento allo scenarioDue
-		    	areaDiGioco.getChildren().add(q2);
-		    	personaggio1.setX(0);
-		    	personaggio1.setY(0);
-		    	break;
+		    // Da mappaDue a mappaTre
+		    if (boundPersonaggio.intersects(boundMappaDueToTre) ) {
+		    	areaDiGioco.getChildren().clear();
+		        areaDiGioco.getChildren().addAll(q3, personaggio1, hitBoxMappaTreToDue,
+		        		hitBoxMappaTreToQuattro, hitBoxMappaTreToCinque);
+		       
+		        // Posizione hitbox per il passaggio a mappaDue
+		        hitBoxMappaTreToDue.setX(304);
+		        hitBoxMappaTreToDue.setY(0);
+		        hitBoxMappaTreToDue.setFill(Color.RED);
+		        
+		        // Posizione hitbox per il passaggio a mappaQuattro
+		        hitBoxMappaTreToQuattro.setX(0);
+		        hitBoxMappaTreToQuattro.setY(140);
+		        hitBoxMappaTreToQuattro.setFill(Color.RED);
+		        
+		        // Posizione hitbox per il passaggio a mappCinque
+		        hitBoxMappaTreToCinque.setX(96);
+		        hitBoxMappaTreToCinque.setY(304);
+		        hitBoxMappaTreToCinque.setFill(Color.RED);
+
+		        // Cambio la bitmap
+		        mappaSelezionata = mappaTre;
+
+		        // Reimposto la posizione del personaggio nella nuova mappa
+		        posizioneXPersonaggio = 288;
+		        posizioneYPersonaggio = 16;
+		        personaggio1.setX(posizioneXPersonaggio);
+		        personaggio1.setY(posizioneYPersonaggio);
 		    }
 		}
+		
+		
 
 	public static void main(String[] args) {
 		launch(args);
