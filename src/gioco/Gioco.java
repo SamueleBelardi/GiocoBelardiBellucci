@@ -1,5 +1,7 @@
 package gioco;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.geometry.BoundingBox;
 import javafx.geometry.Bounds;
@@ -12,13 +14,13 @@ import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 public class Gioco extends Application{
 	
 	/*
 	 * Hai da fa ste cose stronzo (il più possibile) se non capisci qualcosa ho spiegato tutto
 	 * TODO animazione movimento del personaggio
-	 * TODO cambio scenario attraverso collisione in un determinato punto della mappa
 	 * TODO mettere sulla mappa monete da raccogliere "obbiettivo del gioco" che quando ci passa sopra si levano dalla mappa
 	 */
 
@@ -96,7 +98,6 @@ public class Gioco extends Application{
 		hitBoxMappaUnoToDue.setX(192);
 		hitBoxMappaUnoToDue.setY(304);
 		hitBoxMappaUnoToDue.setFill(Color.RED);
-		
 		
 		Scene scena = new Scene(areaDiGioco);
 		primaryStage.setTitle("Gioco");
