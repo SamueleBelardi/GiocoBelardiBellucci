@@ -49,8 +49,8 @@ public class Gioco extends Application{
 	Rectangle hitBoxMappaTreToDue = new Rectangle(16, 16);
 	Rectangle  hitBoxMappaTreToQuattro = new Rectangle(16, 48);
 	Rectangle  hitBoxMappaTreToCinque = new Rectangle(48, 16);
-	Rectangle  hitBoxMappaQuattroToTre = new Rectangle(DIMENSIONE_X_RETTANGOLO, DIMENSIONE_Y_RETTANGOLO);
-	Rectangle  hitBoxMappaCinqueToTre = new Rectangle(DIMENSIONE_X_RETTANGOLO, DIMENSIONE_Y_RETTANGOLO); 
+	Rectangle  hitBoxMappaQuattroToTre = new Rectangle(16,32);
+	Rectangle  hitBoxMappaCinqueToTre = new Rectangle(48, 16); 
 	
 	// immagini degli scenari
 	Image scenarioUno = new Image(getClass().getResourceAsStream("ScenarioUno.png"));
@@ -247,6 +247,133 @@ public class Gioco extends Application{
 		        // Reimposto la posizione del personaggio nella nuova mappa
 		        posizioneXPersonaggio = 288;
 		        posizioneYPersonaggio = 16;
+		        personaggio1.setX(posizioneXPersonaggio);
+		        personaggio1.setY(posizioneYPersonaggio);
+		    }
+		    
+		    // Da mappaTre a mappaDue
+		    if(boundPersonaggio.intersects(boundMappaTreToDue)) {
+		    	areaDiGioco.getChildren().clear();
+		        areaDiGioco.getChildren().addAll(q2, personaggio1, hitBoxMappaDueToUno, hitBoxMappaDueToTre);
+
+		        // Posizione hitbox per il ritorno a mappaUno
+		        hitBoxMappaDueToUno.setX(192);
+		        hitBoxMappaDueToUno.setY(0);
+		        hitBoxMappaDueToUno.setFill(Color.RED);
+
+		        // Posizione hitbox per il passaggio a mappaTre
+		        hitBoxMappaDueToTre.setX(16);
+		        hitBoxMappaDueToTre.setY(304);
+		        hitBoxMappaDueToTre.setFill(Color.RED);
+
+		        // Cambio la bitmap
+		        mappaSelezionata = mappaDue;
+
+		        // Reimposto la posizione del personaggio nella nuova mappa
+		        posizioneXPersonaggio = 32;
+		        posizioneYPersonaggio = 272;
+		        personaggio1.setX(posizioneXPersonaggio);
+		        personaggio1.setY(posizioneYPersonaggio);
+		    }
+		    
+		    // Da mappaTre a mappaQuattro
+		    if(boundPersonaggio.intersects(boundMappaTreToQuattro)) {
+		    	areaDiGioco.getChildren().clear();
+		        areaDiGioco.getChildren().addAll(q4, personaggio1, hitBoxMappaQuattroToTre);
+		       
+		        // Posizione hitbox per il passaggio a mappaDue
+		        hitBoxMappaQuattroToTre.setX(304);
+		        hitBoxMappaQuattroToTre.setY(128);
+		        hitBoxMappaQuattroToTre.setFill(Color.RED);
+		        
+		        // Cambio la bitmap
+		        mappaSelezionata = mappaQuattro;
+
+		        // Reimposto la posizione del personaggio nella nuova mappa
+		        posizioneXPersonaggio = 288;
+		        posizioneYPersonaggio = 128;
+		        personaggio1.setX(posizioneXPersonaggio);
+		        personaggio1.setY(posizioneYPersonaggio);
+		    }
+		    
+		    // Da mappaQuattro a mappaTre
+		    if (boundPersonaggio.intersects(boundMappaQuattroToTre) ) {
+		    	areaDiGioco.getChildren().clear();
+		        areaDiGioco.getChildren().addAll(q3, personaggio1, hitBoxMappaTreToDue,
+		        		hitBoxMappaTreToQuattro, hitBoxMappaTreToCinque);
+		       
+		        // Posizione hitbox per il passaggio a mappaDue
+		        hitBoxMappaTreToDue.setX(304);
+		        hitBoxMappaTreToDue.setY(0);
+		        hitBoxMappaTreToDue.setFill(Color.RED);
+		        
+		        // Posizione hitbox per il passaggio a mappaQuattro
+		        hitBoxMappaTreToQuattro.setX(0);
+		        hitBoxMappaTreToQuattro.setY(140);
+		        hitBoxMappaTreToQuattro.setFill(Color.RED);
+		        
+		        // Posizione hitbox per il passaggio a mappCinque
+		        hitBoxMappaTreToCinque.setX(96);
+		        hitBoxMappaTreToCinque.setY(304);
+		        hitBoxMappaTreToCinque.setFill(Color.RED);
+
+		        // Cambio la bitmap
+		        mappaSelezionata = mappaTre;
+
+		        // Reimposto la posizione del personaggio nella nuova mappa
+		        posizioneXPersonaggio = 16;
+		        posizioneYPersonaggio = 140;
+		        personaggio1.setX(posizioneXPersonaggio);
+		        personaggio1.setY(posizioneYPersonaggio);
+		    }
+		    
+		    // Da mappaTre a mappaCinque
+		    if(boundPersonaggio.intersects(boundMappaTreToCinque)) {
+		    	areaDiGioco.getChildren().clear();
+		        areaDiGioco.getChildren().addAll(q5, personaggio1, hitBoxMappaCinqueToTre);
+		       
+		        // Posizione hitbox per il passaggio a mappaDue
+		        hitBoxMappaCinqueToTre.setX(112);
+		        hitBoxMappaCinqueToTre.setY(0);
+		        hitBoxMappaCinqueToTre.setFill(Color.RED);
+
+		        // Cambio la bitmap
+		        mappaSelezionata = mappaCinque;
+
+		        // Reimposto la posizione del personaggio nella nuova mappa
+		        posizioneXPersonaggio = 128;
+		        posizioneYPersonaggio = 16;
+		        personaggio1.setX(posizioneXPersonaggio);
+		        personaggio1.setY(posizioneYPersonaggio);
+		    }
+		    
+		    // Da mappaCinque a mappaTre
+		    if(boundPersonaggio.intersects(boundMappaCinqueToTre)) {
+		    	areaDiGioco.getChildren().clear();
+		        areaDiGioco.getChildren().addAll(q3, personaggio1, hitBoxMappaTreToDue,
+		        		hitBoxMappaTreToQuattro, hitBoxMappaTreToCinque);
+		       
+		        // Posizione hitbox per il passaggio a mappaDue
+		        hitBoxMappaTreToDue.setX(304);
+		        hitBoxMappaTreToDue.setY(0);
+		        hitBoxMappaTreToDue.setFill(Color.RED);
+		        
+		        // Posizione hitbox per il passaggio a mappaQuattro
+		        hitBoxMappaTreToQuattro.setX(0);
+		        hitBoxMappaTreToQuattro.setY(140);
+		        hitBoxMappaTreToQuattro.setFill(Color.RED);
+		        
+		        // Posizione hitbox per il passaggio a mappCinque
+		        hitBoxMappaTreToCinque.setX(96);
+		        hitBoxMappaTreToCinque.setY(304);
+		        hitBoxMappaTreToCinque.setFill(Color.RED);
+
+		        // Cambio la bitmap
+		        mappaSelezionata = mappaTre;
+
+		        // Reimposto la posizione del personaggio nella nuova mappa
+		        posizioneXPersonaggio = 112;
+		        posizioneYPersonaggio = 272;
 		        personaggio1.setX(posizioneXPersonaggio);
 		        personaggio1.setY(posizioneYPersonaggio);
 		    }
