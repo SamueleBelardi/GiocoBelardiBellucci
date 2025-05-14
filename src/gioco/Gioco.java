@@ -23,8 +23,6 @@ public class Gioco extends Application{
 	 * TODO animazione movimento del personaggio
 	 * TODO mettere sulla mappa monete da raccogliere "obbiettivo del gioco" che quando ci passa sopra si levano dalla mappa
 	 */
-
-	
 	
 	// bitmap, servono per vedere se il personaggio puo camminare o no su un determinato riquadro
 	Mappa mappaUno = new Mappa("ScenarioUno.txt");
@@ -34,15 +32,13 @@ public class Gioco extends Application{
 	Mappa mappaCinque = new Mappa("ScenarioCinque.txt");
 	Mappa mappaSelezionata = mappaUno;
 	
-	double movimento = 2; 
+	double movimento = 3; 
 	double posizioneXPersonaggio = 180; // posizione X personaggio nella mappa
 	double posizioneYPersonaggio = 180; // posizione Y personaggio nella mappa
 	static final double DIMENSIONE_X = 320; // dimensione X della mappa
 	static final double DIMENSIONE_Y = 320; // dimensione Y della mappa
 	static final double DIMENSIONE_X_PERSONAGGIO = 16; // numero di pixel X (grandezza) del personaggio
 	static final double DIMENSIONE_Y_PERSONAGGIO = 32; // numero di pixel Y (grandezza) del personaggio
-	static final double DIMENSIONE_X_RETTANGOLO = 16;
-	static final double DIMENSIONE_Y_RETTANGOLO = 16;
 	
 	// hitbox per cambio mappa
 	Rectangle hitBoxMappaUnoToDue = new Rectangle(16, 16);
@@ -72,6 +68,16 @@ public class Gioco extends Application{
 	Image movimentoSinistra = new Image(getClass().getResourceAsStream("movimentoSinistra.png"));
 	Image moneta = new Image(getClass().getResourceAsStream("moneta.png"));
 	
+	//vettori di immagini
+	Image [] sequenzaGiu = new Image[1000];
+	Image [] sequenzaDestra = new Image[1000];
+	Image [] sequenzaSu = new Image[1000];
+	Image [] sequenzaSinistra = new Image[1000];
+	int contatoreGiu = 0;
+	int contatoreDestra = 0;
+	int contatoreSu = 0;
+	int contatoreSinistra = 0;
+	
 	ImageView q1 = new ImageView(scenarioUno);
 	ImageView q2 = new ImageView(scenarioDue);
 	ImageView q3 = new ImageView(scenarioTre);
@@ -80,8 +86,7 @@ public class Gioco extends Application{
 	ImageView personaggio1 = new ImageView(fermoGiu);
 	ImageView obbiettivo = new ImageView(moneta);
 	
-		
-	
+	String movimentoAttuale = "";
 	
 	// pane in cui si aggiungono gli scenari, personaggio, ecc
 	Pane areaDiGioco = new Pane();
@@ -99,37 +104,106 @@ public class Gioco extends Application{
 		hitBoxMappaUnoToDue.setY(304);
 		hitBoxMappaUnoToDue.setFill(Color.RED);
 		
+		for(int i = 0; i < 1; i++) {
+			if(i%2 == 0) {
+				sequenzaGiu [i] = new Image(getClass().getResourceAsStream("movimentoGiu.png"));
+				sequenzaDestra [i] = new Image(getClass().getResourceAsStream("movimentoDestra.png"));
+				sequenzaSu [i] = new Image(getClass().getResourceAsStream("movimentoSu.png"));
+				sequenzaSinistra [i] = new Image(getClass().getResourceAsStream("movimentoSinistra.png"));
+			} else {
+				sequenzaGiu [i] = new Image(getClass().getResourceAsStream("fermoGiu.png"));
+				sequenzaDestra [i] = new Image(getClass().getResourceAsStream("fermoDestra.png"));
+				sequenzaSu [i] = new Image(getClass().getResourceAsStream("fermoSu.png"));
+				sequenzaSinistra [i] = new Image(getClass().getResourceAsStream("fermoSinistra.png"));
+			}
+		}
+		
+		Timeline timeline = new Timeline(new KeyFrame(
+				Duration.seconds(0.016), 
+				x -> aggiornaMovimento()));
+		timeline.setCycleCount(-1);
+		timeline.play();
+		
 		Scene scena = new Scene(areaDiGioco);
 		primaryStage.setTitle("Gioco");
 		primaryStage.setScene(scena);
 		primaryStage.show();
 		scena.setOnKeyPressed( e -> tastoPremuto(e));
+		scena.setOnKeyReleased(e -> tastoRilasciato(e));
 	}
 	
+	private void tastoRilasciato(KeyEvent e) {
+	    String tasto = e.getText().toLowerCase();
+	    movimentoAttuale = ""; // Svuota il movimento attuale per fermare l'animazione
+
+	    switch (tasto) {
+	        case "w":
+	            personaggio1.setImage(fermoSu);
+	            break;
+	        case "s":
+	            personaggio1.setImage(fermoGiu);
+	            break;
+	        case "a":
+	            personaggio1.setImage(fermoSinistra);
+	            break;
+	        case "d":
+	            personaggio1.setImage(fermoDestra);
+	            break;
+	    }
+	}
+	
+	private void aggiornaMovimento() {
+	
+		if (!movimentoAttuale.isEmpty()) {
+			switch (movimentoAttuale) {
+			case "w":
+				personaggio1.setImage(sequenzaSu[contatoreSu % 2]);
+				contatoreSu++;
+				break;
+			case "s":
+				personaggio1.setImage(sequenzaGiu[contatoreGiu % 2]);
+				contatoreGiu++;
+				break;
+			case "a":
+				personaggio1.setImage(sequenzaSinistra[contatoreSinistra % 2]);
+				contatoreSinistra++;
+				break;
+			case "d":
+				personaggio1.setImage(sequenzaDestra[contatoreDestra % 2]);
+				contatoreDestra++;
+				break;
+			}
+		}	
+		
+		personaggio1.setX(posizioneXPersonaggio);
+		personaggio1.setY(posizioneYPersonaggio);
+	}
+
 	// metodo che fa muovore il personaggio quando si preme un determinato tasto
 	private void tastoPremuto(KeyEvent e) {
 		// servono per reimpostara la posizione iniziale in caso di collisone
 		double nuovaX = posizioneXPersonaggio;
 		double nuovaY = posizioneYPersonaggio;
 		
-		// movimento personaggio
-		if(e.getText().toLowerCase().equals("w")) {
-			posizioneYPersonaggio -= movimento;
-			personaggio1.setImage(fermoSu);
-		}
-		if(e.getText().toLowerCase().equals("s")) {
-			posizioneYPersonaggio += movimento;
-			personaggio1.setImage(fermoGiu);
-		}
-		if(e.getText().toLowerCase().equals("a")) {
-			posizioneXPersonaggio -= movimento;
-			personaggio1.setImage(fermoSinistra);
-		}
-		if(e.getText().toLowerCase().equals("d")) {
-			posizioneXPersonaggio += movimento;
-			personaggio1.setImage(fermoDestra);
-		}
+		// Ottieni il tasto premuto e imposta il movimento attuale
+	    String tasto = e.getText().toLowerCase();
+	    movimentoAttuale = tasto;
 		
+		switch (tasto) {
+        case "w":
+        	posizioneYPersonaggio -= movimento;
+            break;
+        case "s":
+        	posizioneYPersonaggio += movimento;
+            break;
+        case "a":
+        	posizioneXPersonaggio -= movimento;
+            break;
+        case "d":
+        	posizioneXPersonaggio += movimento;
+            break;
+        }
+	    
 		// controllo collisioni
 		if(puoMuoversi(nuovaX, nuovaY)) {
 			posizioneXPersonaggio = nuovaX;

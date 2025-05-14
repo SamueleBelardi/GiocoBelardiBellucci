@@ -30,7 +30,6 @@ public class Mappa {
 			while( (rigaLetta = lettore.readLine())!=null && riga < 20 ) {
 				// vettore di caratteri dove è presente la riga presa dal file.txt
 				char [] rigaDivisa = rigaLetta.toCharArray();
-				System.out.println(">>"+rigaLetta+"<<");
 				// aggiunge tutti i valori del vettore di caratteri alla matrice
 				for(int i = 0; i < rigaDivisa.length; i++) { // indice delle colonne
 					mappa [riga][i] = rigaDivisa [i]; 
