@@ -122,7 +122,7 @@ public class Gioco extends Application{
 
 		// timeline che permette il movimento animato del personaggio
 		Timeline timeline = new Timeline(new KeyFrame(
-				Duration.seconds(0.016), 
+				Duration.seconds(0.032), 
 				x -> aggiornaMovimento()));
 		timeline.setCycleCount(-1);
 		timeline.play();
