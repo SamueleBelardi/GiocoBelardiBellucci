@@ -463,4 +463,9 @@ public class Gioco extends Application{
 	public static void main(String[] args) {
 		launch(args);
 	}
+
+	public void mostra(Stage primaryStage) {
+		// TODO Auto-generated method stub
+		
+	}
 }
