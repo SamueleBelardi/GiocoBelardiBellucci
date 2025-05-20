@@ -18,15 +18,27 @@ public class PrimaPagina extends Application {
 	    
         // Crea il pulsante trasparente
         Button button = new Button();
-        button.setStyle("-fx-background-color: red;");
+        button.setStyle("-fx-background-color: transparent;");
         button.setPrefSize(200, 100);
 
         // Azione al click del pulsante
         button.setOnAction(e -> {
-            Gioco gioco = new Gioco();
-            gioco.mostra(primaryStage);
+        	 Gioco mappa = new Gioco();
+        	 mappa.inizio();
+             Scene giocoScene = new Scene(mappa, 320, 320); 
+             
+             giocoScene.setOnKeyPressed(event -> {
+                 mappa.tastoPremuto(event);
+             });
+             
+             giocoScene.setOnKeyReleased(event -> {
+                 mappa.tastoRilasciato(event);
+             });
+             
+             primaryStage.setScene(giocoScene);
+             giocoScene.getRoot().requestFocus(); // necessario per ricevere gli eventi da tastiera
         });  
-        
+       
 
         // Sovrapposizione immagine e pulsante
         StackPane sfondo = new StackPane(imageView, button);

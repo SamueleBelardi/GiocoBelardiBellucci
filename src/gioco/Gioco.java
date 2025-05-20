@@ -9,6 +9,7 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
@@ -16,7 +17,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
-public class Gioco extends Application{
+public class Gioco extends BorderPane{
 
 	/*
 	 * Hai da fa ste cose stronzo (il più possibile) se non capisci qualcosa ho spiegato tutto
@@ -39,6 +40,9 @@ public class Gioco extends Application{
 	static final double DIMENSIONE_Y = 320; // dimensione Y della mappa
 	static final double DIMENSIONE_X_PERSONAGGIO = 16; // numero di pixel X (grandezza) del personaggio
 	static final double DIMENSIONE_Y_PERSONAGGIO = 32; // numero di pixel Y (grandezza) del personaggio
+	static final double DIMENSIONE_X_MAPPA = 320; // numero di pixel X (grandezza) del personaggio
+	static final double DIMENSIONE_Y_MAPPA = 320; // numero di pixel Y (grandezza) del personaggio
+
 
 	// hitbox per cambio mappa
 	Rectangle hitBoxMappaUnoToDue = new Rectangle(16, 16);
@@ -49,6 +53,16 @@ public class Gioco extends Application{
 	Rectangle  hitBoxMappaTreToCinque = new Rectangle(48, 16);
 	Rectangle  hitBoxMappaQuattroToTre = new Rectangle(16,32);
 	Rectangle  hitBoxMappaCinqueToTre = new Rectangle(48, 16); 
+	
+	// hitbox monete
+	Rectangle  hitBoxObbiettivoUno = new Rectangle(16, 16); 
+	Rectangle  hitBoxObbiettivoDue = new Rectangle(16, 16); 
+	Rectangle  hitBoxObbiettivoTre = new Rectangle(16, 16); 
+	Rectangle  hitBoxObbiettivoQuattro = new Rectangle(16, 16); 
+	Rectangle  hitBoxObbiettivoCinque = new Rectangle(16, 16);  
+	
+	// vettore che controlla se una moneta e stata mangiata
+	boolean [] monetaPresente = { true, true, true, true, true} ;
 
 	// immagini degli scenari
 	Image scenarioUno = new Image(getClass().getResourceAsStream("ScenarioUno.png"));
@@ -66,7 +80,7 @@ public class Gioco extends Application{
 	Image movimentoSu = new Image(getClass().getResourceAsStream("movimentoSu.png"));
 	Image fermoSinistra = new Image(getClass().getResourceAsStream("fermoSinistra.png"));
 	Image movimentoSinistra = new Image(getClass().getResourceAsStream("movimentoSinistra.png"));
-	Image moneta = new Image(getClass().getResourceAsStream("moneta.png"));
+	Image moneta = new Image(getClass().getResourceAsStream("moneta.gif"));
 
 	//vettori di immagini
 	Image [] sequenzaGiu = new Image[1000];
@@ -84,16 +98,23 @@ public class Gioco extends Application{
 	ImageView q4 = new ImageView(scenarioQuattro);
 	ImageView q5 = new ImageView(scenarioCinque);
 	ImageView personaggio1 = new ImageView(fermoGiu);
-	ImageView obbiettivo = new ImageView(moneta);
+	ImageView obbiettivo1 = new ImageView(moneta);
+	ImageView obbiettivo2 = new ImageView(moneta);
+	ImageView obbiettivo3 = new ImageView(moneta);
+	ImageView obbiettivo4 = new ImageView(moneta);
+	ImageView obbiettivo5 = new ImageView(moneta);
+	
 
 	// Variabile per capire la direzione in cui sta andando il personaggio
 	String movimentoAttuale = "";
+	
+	// condizione vittoria
+	int condizioneVittoria = 0;
 
 	// pane in cui si aggiungono gli scenari, personaggio, ecc
 	Pane areaDiGioco = new Pane();
 
-	@Override
-	public void start(Stage primaryStage) throws Exception {
+	public void inizio() {
 
 		// aggiunta degli elementi al pane
 		areaDiGioco.getChildren().add(q1);
@@ -104,6 +125,9 @@ public class Gioco extends Application{
 		hitBoxMappaUnoToDue.setX(192);
 		hitBoxMappaUnoToDue.setY(304);
 		hitBoxMappaUnoToDue.setFill(Color.RED);
+		areaDiGioco.getChildren().add(obbiettivo1);
+		obbiettivo1.setX(72);
+		obbiettivo1.setY(89);
 
 		// for che inserisce nei vettori le immagini in movimento e fermo
 		for(int i = 0; i < 1; i++) {
@@ -126,17 +150,17 @@ public class Gioco extends Application{
 				x -> aggiornaMovimento()));
 		timeline.setCycleCount(-1);
 		timeline.play();
-
-		Scene scena = new Scene(areaDiGioco);
-		primaryStage.setTitle("Gioco");
-		primaryStage.setScene(scena);
-		primaryStage.show();
-		scena.setOnKeyPressed( e -> tastoPremuto(e));
-		scena.setOnKeyReleased(e -> tastoRilasciato(e));
+		this.setCenter(areaDiGioco);
+	}
+	
+	public void vittoria() {
+		if(condizioneVittoria == 5) {
+			System.out.println("hai finito il gioco complimenti");
+		}
 	}
 
 	// metodo che quando rilascio il tasto imposta l'immagine del personaggio a fermo
-	private void tastoRilasciato(KeyEvent e) {
+	public void tastoRilasciato(KeyEvent e) {
 		String tasto = e.getText().toLowerCase();
 		movimentoAttuale = ""; // Svuota il movimento attuale per fermare l'animazione
 
@@ -184,7 +208,7 @@ public class Gioco extends Application{
 	}
 
 	// metodo che fa muovore il personaggio quando si preme un determinato tasto
-	private void tastoPremuto(KeyEvent e) {
+	public void tastoPremuto(KeyEvent e) {
 		// servono per reimpostara la posizione iniziale in caso di collisone
 		double nuovaX = posizioneXPersonaggio;
 		double nuovaY = posizioneYPersonaggio;
@@ -243,7 +267,7 @@ public class Gioco extends Application{
 
 	public void cambioMappa () {
 
-		// boundingbox per controllo collisioni
+		// boundingbox per controllo collisioni cambiomappa
 		Bounds boundPersonaggio = personaggio1.getBoundsInParent();
 		Bounds boundMappaUnoToDue = hitBoxMappaUnoToDue.getBoundsInParent();
 		Bounds boundMappaDueToUno = hitBoxMappaDueToUno.getBoundsInParent();
@@ -253,6 +277,14 @@ public class Gioco extends Application{
 		Bounds boundMappaTreToCinque = hitBoxMappaTreToCinque.getBoundsInParent();
 		Bounds boundMappaQuattroToTre = hitBoxMappaQuattroToTre.getBoundsInParent();
 		Bounds boundMappaCinqueToTre = hitBoxMappaCinqueToTre.getBoundsInParent();	
+		
+		// controllo monete
+		Bounds boundMonetaUno = obbiettivo1.getBoundsInParent();
+		Bounds boundMonetaDue = obbiettivo2.getBoundsInParent();
+		Bounds boundMonetaTre = obbiettivo3.getBoundsInParent();
+		Bounds boundMonetaQuattro = obbiettivo4.getBoundsInParent();
+		Bounds boundMonetaCinque = obbiettivo5.getBoundsInParent();
+
 
 		// Da mappaUno a mappaDue
 		if (boundPersonaggio.intersects(boundMappaUnoToDue)) {
@@ -268,6 +300,12 @@ public class Gioco extends Application{
 			hitBoxMappaDueToTre.setX(16);
 			hitBoxMappaDueToTre.setY(304);
 			hitBoxMappaDueToTre.setFill(Color.RED);
+			
+			if(monetaPresente[1] == true) {
+				areaDiGioco.getChildren().add(obbiettivo2);
+				obbiettivo2.setX(120);
+				obbiettivo2.setY(120);
+			}
 
 			// Cambio la bitmap
 			mappaSelezionata = mappaDue;
@@ -456,16 +494,38 @@ public class Gioco extends Application{
 			personaggio1.setX(posizioneXPersonaggio);
 			personaggio1.setY(posizioneYPersonaggio);
 		}
-	}
-
-
-
-	public static void main(String[] args) {
-		launch(args);
-	}
-
-	public void mostra(Stage primaryStage) {
-		// TODO Auto-generated method stub
 		
+		if(personaggio1.intersects(boundMonetaUno)) {
+			monetaPresente[0] = false;
+			areaDiGioco.getChildren().remove(obbiettivo1);
+			areaDiGioco.getChildren().remove(hitBoxObbiettivoUno);
+			System.out.println("moneta raccolta");
+			condizioneVittoria++;
+			System.out.println(condizioneVittoria);
+		}
+		if(personaggio1.intersects(boundMonetaDue)) {
+			monetaPresente[1] = false;
+			areaDiGioco.getChildren().remove(obbiettivo1);
+			System.out.println("moneta raccolta");
+			condizioneVittoria++;
+		}
+		if(personaggio1.intersects(boundMonetaTre)) {
+			monetaPresente[2] = false;
+			areaDiGioco.getChildren().remove(obbiettivo1);
+			System.out.println("moneta raccolta");
+			condizioneVittoria++;
+		}
+		if(personaggio1.intersects(boundMonetaQuattro)) {
+			monetaPresente[3] = false;
+			areaDiGioco.getChildren().remove(obbiettivo1);
+			System.out.println("moneta raccolta");
+			condizioneVittoria++;
+		}
+		if(personaggio1.intersects(boundMonetaCinque)) {
+			monetaPresente[4] = false;
+			areaDiGioco.getChildren().remove(obbiettivo1);
+			System.out.println("moneta raccolta");
+			condizioneVittoria++;
+		}
 	}
 }

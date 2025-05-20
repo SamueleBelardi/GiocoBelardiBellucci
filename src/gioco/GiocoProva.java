@@ -247,7 +247,7 @@ public class GiocoProva extends Application{
 
 		// assegno ad una variabile il valore presenta in quella detereminata posizione della bitmap
 		char cella = mappaSelezionata.getMappa()[riga][colonna];
-		System.out.println("Cella [" + riga + "]" + "[" + colonna + "]" + cella);
+		System.out.println("Cella [" + riga + "," + colonna + "]" + cella);
 		return cella == '1'; // ritorno true se cella è uguale a 1
 	}
 
