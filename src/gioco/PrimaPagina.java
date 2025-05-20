@@ -13,19 +13,22 @@ public class PrimaPagina extends Application {
 	
 	public void start(Stage primaryStage) throws Exception {
 
-		Image copertina = new Image(getClass().getResourceAsStream("Copertina.jpeg"));
-	    ImageView imageView = new ImageView (copertina);
+		// I0mmagine copertina
+		Image c = new Image(getClass().getResourceAsStream("Copertina.jpeg"));
+	    ImageView copertina = new ImageView(c);
+	   
+	    Gioco mappa = new Gioco();
 	    
-        // Crea il pulsante trasparente
-        Button button = new Button();
-        button.setStyle("-fx-background-color: transparent;");
-        button.setPrefSize(200, 100);
+        // Pulsante inizio Gioco
+        Button inizio = new Button();
+        inizio.setStyle("-fx-background-color: transparent;");
+        inizio.setPrefSize(200, 100);
 
         // Azione al click del pulsante
-        button.setOnAction(e -> {
-        	 Gioco mappa = new Gioco();
+        inizio.setOnAction(e -> {
+        	
         	 mappa.inizio();
-             Scene giocoScene = new Scene(mappa, 320, 320); 
+             Scene giocoScene = new Scene(mappa, 320, 336); 
              
              giocoScene.setOnKeyPressed(event -> {
                  mappa.tastoPremuto(event);
@@ -38,12 +41,18 @@ public class PrimaPagina extends Application {
              primaryStage.setScene(giocoScene);
              giocoScene.getRoot().requestFocus(); // necessario per ricevere gli eventi da tastiera
         });  
+        
+        if(mappa.vittoria()) {
+        	Fine fine = new Fine();
+        	fine.sfondo();
+        	Scene fineScene = new Scene(fine);
+        	primaryStage.setScene(fineScene);
+        }
        
-
-        // Sovrapposizione immagine e pulsante
-        StackPane sfondo = new StackPane(imageView, button);
-        button.setTranslateX(350);
-        button.setTranslateY(330);
+        // StackPane iniziale
+        StackPane sfondo = new StackPane(copertina, inizio);
+        inizio.setTranslateX(350);
+        inizio.setTranslateY(330);
         Scene scene = new Scene(sfondo);
 		
 		primaryStage.setTitle("PrimaPagina");
