@@ -33,7 +33,7 @@ public class Gioco extends BorderPane{
 	Mappa mappaCinque = new Mappa("ScenarioCinque.txt");
 	Mappa mappaSelezionata = mappaUno;
 
-	double movimento = 3; 
+	double movimento = 3; // unita dello spostamento del personaggio 
 	double posizioneXPersonaggio = 180; // posizione X personaggio nella mappa
 	double posizioneYPersonaggio = 180; // posizione Y personaggio nella mappa
 	static final double DIMENSIONE_X = 320; // dimensione X della mappa
@@ -43,8 +43,7 @@ public class Gioco extends BorderPane{
 	static final double DIMENSIONE_X_MAPPA = 320; // numero di pixel X (grandezza) del personaggio
 	static final double DIMENSIONE_Y_MAPPA = 320; // numero di pixel Y (grandezza) del personaggio
 
-
-	// hitbox per cambio mappa
+	// hitbox per cambio mappa 
 	Rectangle hitBoxMappaUnoToDue = new Rectangle(16, 16);
 	Rectangle  hitBoxMappaDueToUno = new Rectangle(16, 16);
 	Rectangle hitBoxMappaDueToTre = new Rectangle(48, 16);
@@ -61,6 +60,38 @@ public class Gioco extends BorderPane{
 	Rectangle  hitBoxObbiettivoQuattro = new Rectangle(16, 16); 
 	Rectangle  hitBoxObbiettivoCinque = new Rectangle(16, 16);  
 	
+	// posizioni hitbox cambiMappa X
+	static final double POSIZIONE_HITBOX_UNO_TO_DUE_X = 192;
+	static final double POSIZIONE_HITBOX_DUE_TO_UNO_X = 192;
+	static final double POSIZIONE_HITBOX_DUE_TO_TRE_X = 16;
+	static final double POSIZIONE_HITBOX_TRE_TO_DUE_X = 304;
+	static final double POSIZIONE_HITBOX_TRE_TO_QUATTRO_X = 0;
+	static final double POSIZIONE_HITBOX_TRE_TO_CINQUE_X = 96;
+	static final double POSIZIONE_HITBOX_QUATTRO_TO_TRE_X = 304;
+	static final double POSIZIONE_HITBOX_CINQUE_TO_TRE_X = 112;
+	// posizioni Y
+	static final double POSIZIONE_HITBOX_UNO_TO_DUE_Y = 304;
+	static final double POSIZIONE_HITBOX_DUE_TO_UNO_Y = 0;
+	static final double POSIZIONE_HITBOX_DUE_TO_TRE_Y = 304;
+	static final double POSIZIONE_HITBOX_TRE_TO_DUE_Y = 0;
+	static final double POSIZIONE_HITBOX_TRE_TO_QUATTRO_Y = 140;
+	static final double POSIZIONE_HITBOX_TRE_TO_CINQUE_Y = 304;
+	static final double POSIZIONE_HITBOX_QUATTRO_TO_TRE_Y = 128;
+	static final double POSIZIONE_HITBOX_CINQUE_TO_TRE_Y = 0;
+	
+	//posizione monete X
+	static final double POSIZIONE_MONETA_1_X = 72;
+	static final double POSIZIONE_MONETA_2_X = 120;
+	static final double POSIZIONE_MONETA_3_X = 160;
+	static final double POSIZIONE_MONETA_4_X = 250;
+	static final double POSIZIONE_MONETA_5_X = 112;
+	// posizioni Y
+	static final double POSIZIONE_MONETA_1_Y = 92;
+	static final double POSIZIONE_MONETA_2_Y= 120;
+	static final double POSIZIONE_MONETA_3_Y = 160;
+	static final double POSIZIONE_MONETA_4_Y = 120;
+	static final double POSIZIONE_MONETA_5_Y = 120;
+		
 	// vettore che controlla se una moneta e stata mangiata
 	boolean [] monetaPresente = { true, true, true, true, true} ;
 
@@ -98,18 +129,18 @@ public class Gioco extends BorderPane{
 	ImageView q4 = new ImageView(scenarioQuattro);
 	ImageView q5 = new ImageView(scenarioCinque);
 	ImageView personaggio1 = new ImageView(fermoGiu);
-	ImageView obbiettivo1 = new ImageView(moneta);
-	ImageView obbiettivo2 = new ImageView(moneta);
-	ImageView obbiettivo3 = new ImageView(moneta);
-	ImageView obbiettivo4 = new ImageView(moneta);
-	ImageView obbiettivo5 = new ImageView(moneta);
+	ImageView moneta1 = new ImageView(moneta);
+	ImageView moneta2 = new ImageView(moneta);
+	ImageView moneta3 = new ImageView(moneta);
+	ImageView moneta4 = new ImageView(moneta);
+	ImageView moneta5 = new ImageView(moneta);
 	
 
 	// Variabile per capire la direzione in cui sta andando il personaggio
 	String movimentoAttuale = "";
 	
 	// condizione vittoria
-	int condizioneVittoria = 0;
+	int moneteRaccolte = 0;
 
 	// pane in cui si aggiungono gli scenari, personaggio, ecc
 	Pane areaDiGioco = new Pane();
@@ -125,12 +156,12 @@ public class Gioco extends BorderPane{
 		hitBoxMappaUnoToDue.setX(192);
 		hitBoxMappaUnoToDue.setY(304);
 		hitBoxMappaUnoToDue.setFill(Color.RED);
-		areaDiGioco.getChildren().add(obbiettivo1);
-		obbiettivo1.setX(72);
-		obbiettivo1.setY(89);
+		areaDiGioco.getChildren().add(moneta1);
+		moneta1.setX(POSIZIONE_MONETA_1_X);
+		moneta1.setY(POSIZIONE_MONETA_1_Y);
 
 		// for che inserisce nei vettori le immagini in movimento e fermo
-		for(int i = 0; i < 1; i++) {
+		for(int i = 0; i < sequenzaSu.length; i++) {
 			if(i%2 == 0) {
 				sequenzaGiu [i] = new Image(getClass().getResourceAsStream("movimentoGiu.png"));
 				sequenzaDestra [i] = new Image(getClass().getResourceAsStream("movimentoDestra.png"));
@@ -146,7 +177,7 @@ public class Gioco extends BorderPane{
 
 		// timeline che permette il movimento animato del personaggio
 		Timeline timeline = new Timeline(new KeyFrame(
-				Duration.seconds(0.032), 
+				Duration.seconds(0.064), 
 				x -> aggiornaMovimento()));
 		timeline.setCycleCount(-1);
 		timeline.play();
@@ -154,7 +185,7 @@ public class Gioco extends BorderPane{
 	}
 	
 	public void vittoria() {
-		if(condizioneVittoria == 5) {
+		if(moneteRaccolte == 5) {
 			System.out.println("hai finito il gioco complimenti");
 		}
 	}
@@ -166,45 +197,26 @@ public class Gioco extends BorderPane{
 
 		// switch che imposta l'immagine
 		switch (tasto) {
-		case "w":
-			personaggio1.setImage(fermoSu);
-			break;
-		case "s":
-			personaggio1.setImage(fermoGiu);
-			break;
-		case "a":
-			personaggio1.setImage(fermoSinistra);
-			break;
-		case "d":
-			personaggio1.setImage(fermoDestra);
-			break;
+		 case "w" -> personaggio1.setImage(fermoSu);
+		    case "s" -> personaggio1.setImage(fermoGiu);
+		    case "a" -> personaggio1.setImage(fermoSinistra);
+		    case "d" -> personaggio1.setImage(fermoDestra);
 		}
 	}
 
 	//  metodo che permette il movimento fluido
 	private void aggiornaMovimento() {
 
-		// controlla se è presente qualcosa nella variabile
+		// controlla se è presente qualcosa quindi se il personaggio e fermo o in movimento
 		if (!movimentoAttuale.isEmpty()) {
-			switch (movimentoAttuale) { // in base alla lettera aggiorna l'immagine
-			case "w":
-				personaggio1.setImage(sequenzaSu[contatoreSu % 2]);
-				contatoreSu++; // aumenta il contatore in modo tale che il giro successivo cambia con un'altra immagine
-				break;
-			case "s":
-				personaggio1.setImage(sequenzaGiu[contatoreGiu % 2]);
-				contatoreGiu++; // aumenta il contatore in modo tale che il giro successivo cambia con un'altra immagine
-				break;
-			case "a":
-				personaggio1.setImage(sequenzaSinistra[contatoreSinistra % 2]);
-				contatoreSinistra++; // aumenta il contatore in modo tale che il giro successivo cambia con un'altra immagine
-				break;
-			case "d":
-				personaggio1.setImage(sequenzaDestra[contatoreDestra % 2]);
-				contatoreDestra++; // aumenta il contatore in modo tale che il giro successivo cambia con un'altra immagine
-				break;
-			}
-		}	
+			int immagine = 0;
+		    switch (movimentoAttuale) { // alterna l'immagine in movimento o fermo in movimento grazie al calcolo del numero se e pari o dispari
+		        case "w" -> personaggio1.setImage(sequenzaSu[immagine = contatoreSu++ % 2]);
+		        case "s" -> personaggio1.setImage(sequenzaGiu[immagine = contatoreGiu++ % 2]);
+		        case "a" -> personaggio1.setImage(sequenzaSinistra[immagine = contatoreSinistra++ % 2]);
+		        case "d" -> personaggio1.setImage(sequenzaDestra[immagine = contatoreDestra++ % 2]);
+		    }
+		} 	
 	}
 
 	// metodo che fa muovore il personaggio quando si preme un determinato tasto
@@ -218,19 +230,11 @@ public class Gioco extends BorderPane{
 		movimentoAttuale = tasto;
 
 		switch (tasto) {
-		case "w":
-			posizioneYPersonaggio -= movimento;
-			break;
-		case "s":
-			posizioneYPersonaggio += movimento;
-			break;
-		case "a":
-			posizioneXPersonaggio -= movimento;
-			break;
-		case "d":
-			posizioneXPersonaggio += movimento;
-			break;
-		}
+	    case "w" -> posizioneYPersonaggio -= movimento;
+	    case "s" -> posizioneYPersonaggio += movimento;
+	    case "a" -> posizioneXPersonaggio -= movimento;
+	    case "d" -> posizioneXPersonaggio += movimento;
+	}
 
 		// controllo collisioni
 		if(puoMuoversi(nuovaX, nuovaY)) {
@@ -261,7 +265,7 @@ public class Gioco extends BorderPane{
 
 		// assegno ad una variabile il valore presenta in quella detereminata posizione della bitmap
 		char cella = mappaSelezionata.getMappa()[riga][colonna];
-		System.out.println("Cella [" + riga + "]" + "[" + colonna + "]" + cella);
+		//System.out.println("Cella [" + riga + "]" + "[" + colonna + "]" + cella);
 		return cella == '1'; // ritorno true se cella è uguale a 1
 	}
 
@@ -279,32 +283,32 @@ public class Gioco extends BorderPane{
 		Bounds boundMappaCinqueToTre = hitBoxMappaCinqueToTre.getBoundsInParent();	
 		
 		// controllo monete
-		Bounds boundMonetaUno = obbiettivo1.getBoundsInParent();
-		Bounds boundMonetaDue = obbiettivo2.getBoundsInParent();
-		Bounds boundMonetaTre = obbiettivo3.getBoundsInParent();
-		Bounds boundMonetaQuattro = obbiettivo4.getBoundsInParent();
-		Bounds boundMonetaCinque = obbiettivo5.getBoundsInParent();
-
-
+		Bounds boundMonetaUno = moneta1.getBoundsInParent();
+		Bounds boundMonetaDue = moneta2.getBoundsInParent();
+		Bounds boundMonetaTre = moneta3.getBoundsInParent();
+		Bounds boundMonetaQuattro = moneta4.getBoundsInParent();
+		Bounds boundMonetaCinque = moneta5.getBoundsInParent();
+		
 		// Da mappaUno a mappaDue
 		if (boundPersonaggio.intersects(boundMappaUnoToDue)) {
 			areaDiGioco.getChildren().clear();
 			areaDiGioco.getChildren().addAll(q2, personaggio1, hitBoxMappaDueToUno, hitBoxMappaDueToTre);
 
 			// Posizione hitbox per il ritorno a mappaUno
-			hitBoxMappaDueToUno.setX(192);
-			hitBoxMappaDueToUno.setY(0);
+			hitBoxMappaDueToUno.setX(POSIZIONE_HITBOX_DUE_TO_UNO_X);
+			hitBoxMappaDueToUno.setY(POSIZIONE_HITBOX_DUE_TO_UNO_Y);
 			hitBoxMappaDueToUno.setFill(Color.RED);
 
 			// Posizione hitbox per il passaggio a mappaTre
-			hitBoxMappaDueToTre.setX(16);
-			hitBoxMappaDueToTre.setY(304);
+			hitBoxMappaDueToTre.setX(POSIZIONE_HITBOX_DUE_TO_TRE_X);
+			hitBoxMappaDueToTre.setY(POSIZIONE_HITBOX_DUE_TO_TRE_Y);
 			hitBoxMappaDueToTre.setFill(Color.RED);
 			
+			// Posizione moneta2
 			if(monetaPresente[1] == true) {
-				areaDiGioco.getChildren().add(obbiettivo2);
-				obbiettivo2.setX(120);
-				obbiettivo2.setY(120);
+				areaDiGioco.getChildren().add(moneta2);
+				moneta2.setX(POSIZIONE_MONETA_2_X);
+				moneta2.setY(POSIZIONE_MONETA_2_Y);
 			}
 
 			// Cambio la bitmap
@@ -323,10 +327,16 @@ public class Gioco extends BorderPane{
 			areaDiGioco.getChildren().addAll(q1, personaggio1, hitBoxMappaUnoToDue);
 
 			// Posizione hitbox per il passaggio a mappaDue
-			hitBoxMappaUnoToDue.setX(192);
-			hitBoxMappaUnoToDue.setY(304);
+			hitBoxMappaUnoToDue.setX(POSIZIONE_HITBOX_UNO_TO_DUE_X);
+			hitBoxMappaUnoToDue.setY(POSIZIONE_HITBOX_UNO_TO_DUE_Y);
 			hitBoxMappaUnoToDue.setFill(Color.RED);
-
+			
+			if(monetaPresente[0]) {
+				areaDiGioco.getChildren().add(moneta1);
+				moneta1.setX(POSIZIONE_MONETA_1_X);
+				moneta1.setY(POSIZIONE_MONETA_1_Y);
+			}
+			
 			// Cambio la bitmap
 			mappaSelezionata = mappaUno;
 
@@ -344,19 +354,25 @@ public class Gioco extends BorderPane{
 					hitBoxMappaTreToQuattro, hitBoxMappaTreToCinque);
 
 			// Posizione hitbox per il passaggio a mappaDue
-			hitBoxMappaTreToDue.setX(304);
-			hitBoxMappaTreToDue.setY(0);
+			hitBoxMappaTreToDue.setX(POSIZIONE_HITBOX_TRE_TO_DUE_X);
+			hitBoxMappaTreToDue.setY(POSIZIONE_HITBOX_TRE_TO_DUE_Y);
 			hitBoxMappaTreToDue.setFill(Color.RED);
 
 			// Posizione hitbox per il passaggio a mappaQuattro
-			hitBoxMappaTreToQuattro.setX(0);
-			hitBoxMappaTreToQuattro.setY(140);
+			hitBoxMappaTreToQuattro.setX(POSIZIONE_HITBOX_TRE_TO_QUATTRO_X);
+			hitBoxMappaTreToQuattro.setY(POSIZIONE_HITBOX_TRE_TO_QUATTRO_Y);
 			hitBoxMappaTreToQuattro.setFill(Color.RED);
 
 			// Posizione hitbox per il passaggio a mappCinque
-			hitBoxMappaTreToCinque.setX(96);
-			hitBoxMappaTreToCinque.setY(304);
+			hitBoxMappaTreToCinque.setX(POSIZIONE_HITBOX_TRE_TO_CINQUE_X);
+			hitBoxMappaTreToCinque.setY(POSIZIONE_HITBOX_TRE_TO_CINQUE_Y);
 			hitBoxMappaTreToCinque.setFill(Color.RED);
+			
+			if(monetaPresente[2]) {
+				areaDiGioco.getChildren().add(moneta3);
+				moneta3.setX(POSIZIONE_MONETA_3_X);
+				moneta3.setY(POSIZIONE_MONETA_3_Y);
+			}
 
 			// Cambio la bitmap
 			mappaSelezionata = mappaTre;
@@ -374,14 +390,20 @@ public class Gioco extends BorderPane{
 			areaDiGioco.getChildren().addAll(q2, personaggio1, hitBoxMappaDueToUno, hitBoxMappaDueToTre);
 
 			// Posizione hitbox per il ritorno a mappaUno
-			hitBoxMappaDueToUno.setX(192);
-			hitBoxMappaDueToUno.setY(0);
+			hitBoxMappaDueToUno.setX(POSIZIONE_HITBOX_DUE_TO_UNO_X);
+			hitBoxMappaDueToUno.setY(POSIZIONE_HITBOX_DUE_TO_UNO_Y);
 			hitBoxMappaDueToUno.setFill(Color.RED);
 
 			// Posizione hitbox per il passaggio a mappaTre
-			hitBoxMappaDueToTre.setX(16);
-			hitBoxMappaDueToTre.setY(304);
+			hitBoxMappaDueToTre.setX(POSIZIONE_HITBOX_DUE_TO_TRE_X);
+			hitBoxMappaDueToTre.setY(POSIZIONE_HITBOX_DUE_TO_TRE_Y);
 			hitBoxMappaDueToTre.setFill(Color.RED);
+			
+			if(monetaPresente[1] == true) {
+				areaDiGioco.getChildren().add(moneta2);
+				moneta2.setX(POSIZIONE_MONETA_2_X);
+				moneta2.setY(POSIZIONE_MONETA_2_Y);
+			}
 
 			// Cambio la bitmap
 			mappaSelezionata = mappaDue;
@@ -399,9 +421,15 @@ public class Gioco extends BorderPane{
 			areaDiGioco.getChildren().addAll(q4, personaggio1, hitBoxMappaQuattroToTre);
 
 			// Posizione hitbox per il passaggio a mappaDue
-			hitBoxMappaQuattroToTre.setX(304);
-			hitBoxMappaQuattroToTre.setY(128);
+			hitBoxMappaQuattroToTre.setX(POSIZIONE_HITBOX_QUATTRO_TO_TRE_X);
+			hitBoxMappaQuattroToTre.setY(POSIZIONE_HITBOX_QUATTRO_TO_TRE_Y);
 			hitBoxMappaQuattroToTre.setFill(Color.RED);
+			
+			if(monetaPresente[3]) {
+				areaDiGioco.getChildren().add(moneta4);
+				moneta4.setX(POSIZIONE_MONETA_4_X);
+				moneta4.setY(POSIZIONE_MONETA_4_Y);
+			}
 
 			// Cambio la bitmap
 			mappaSelezionata = mappaQuattro;
@@ -420,19 +448,25 @@ public class Gioco extends BorderPane{
 					hitBoxMappaTreToQuattro, hitBoxMappaTreToCinque);
 
 			// Posizione hitbox per il passaggio a mappaDue
-			hitBoxMappaTreToDue.setX(304);
-			hitBoxMappaTreToDue.setY(0);
+			hitBoxMappaTreToDue.setX(POSIZIONE_HITBOX_TRE_TO_DUE_X);
+			hitBoxMappaTreToDue.setY(POSIZIONE_HITBOX_TRE_TO_DUE_Y);
 			hitBoxMappaTreToDue.setFill(Color.RED);
 
 			// Posizione hitbox per il passaggio a mappaQuattro
-			hitBoxMappaTreToQuattro.setX(0);
-			hitBoxMappaTreToQuattro.setY(140);
+			hitBoxMappaTreToQuattro.setX(POSIZIONE_HITBOX_TRE_TO_QUATTRO_X);
+			hitBoxMappaTreToQuattro.setY(POSIZIONE_HITBOX_TRE_TO_QUATTRO_Y);
 			hitBoxMappaTreToQuattro.setFill(Color.RED);
 
 			// Posizione hitbox per il passaggio a mappCinque
-			hitBoxMappaTreToCinque.setX(96);
-			hitBoxMappaTreToCinque.setY(304);
+			hitBoxMappaTreToCinque.setX(POSIZIONE_HITBOX_TRE_TO_CINQUE_X);
+			hitBoxMappaTreToCinque.setY(POSIZIONE_HITBOX_TRE_TO_CINQUE_Y);
 			hitBoxMappaTreToCinque.setFill(Color.RED);
+			
+			if(monetaPresente[2]) {
+				areaDiGioco.getChildren().add(moneta3);
+				moneta3.setX(POSIZIONE_MONETA_3_X);
+				moneta3.setY(POSIZIONE_MONETA_3_Y);
+			}
 
 			// Cambio la bitmap
 			mappaSelezionata = mappaTre;
@@ -449,10 +483,16 @@ public class Gioco extends BorderPane{
 			areaDiGioco.getChildren().clear();
 			areaDiGioco.getChildren().addAll(q5, personaggio1, hitBoxMappaCinqueToTre);
 
-			// Posizione hitbox per il passaggio a mappaDue
-			hitBoxMappaCinqueToTre.setX(112);
-			hitBoxMappaCinqueToTre.setY(0);
+			// Posizione hitbox per il passaggio a mappaTre
+			hitBoxMappaCinqueToTre.setX(POSIZIONE_HITBOX_CINQUE_TO_TRE_X);
+			hitBoxMappaCinqueToTre.setY(POSIZIONE_HITBOX_CINQUE_TO_TRE_Y);
 			hitBoxMappaCinqueToTre.setFill(Color.RED);
+			
+			if(monetaPresente[4] == true) {
+				areaDiGioco.getChildren().add(moneta5);
+				moneta5.setX(POSIZIONE_MONETA_5_X);
+				moneta5.setY(POSIZIONE_MONETA_5_Y);
+			}
 
 			// Cambio la bitmap
 			mappaSelezionata = mappaCinque;
@@ -471,19 +511,25 @@ public class Gioco extends BorderPane{
 					hitBoxMappaTreToQuattro, hitBoxMappaTreToCinque);
 
 			// Posizione hitbox per il passaggio a mappaDue
-			hitBoxMappaTreToDue.setX(304);
-			hitBoxMappaTreToDue.setY(0);
+			hitBoxMappaTreToDue.setX(POSIZIONE_HITBOX_TRE_TO_DUE_X);
+			hitBoxMappaTreToDue.setY(POSIZIONE_HITBOX_TRE_TO_DUE_Y);
 			hitBoxMappaTreToDue.setFill(Color.RED);
 
 			// Posizione hitbox per il passaggio a mappaQuattro
-			hitBoxMappaTreToQuattro.setX(0);
-			hitBoxMappaTreToQuattro.setY(140);
+			hitBoxMappaTreToQuattro.setX(POSIZIONE_HITBOX_TRE_TO_QUATTRO_X);
+			hitBoxMappaTreToQuattro.setY(POSIZIONE_HITBOX_TRE_TO_QUATTRO_Y);
 			hitBoxMappaTreToQuattro.setFill(Color.RED);
 
 			// Posizione hitbox per il passaggio a mappCinque
-			hitBoxMappaTreToCinque.setX(96);
-			hitBoxMappaTreToCinque.setY(304);
+			hitBoxMappaTreToCinque.setX(POSIZIONE_HITBOX_TRE_TO_CINQUE_X);
+			hitBoxMappaTreToCinque.setY(POSIZIONE_HITBOX_TRE_TO_CINQUE_Y);
 			hitBoxMappaTreToCinque.setFill(Color.RED);
+			
+			if(monetaPresente[2]) {
+				areaDiGioco.getChildren().add(moneta3);
+				moneta3.setX(POSIZIONE_MONETA_3_X);
+				moneta3.setY(POSIZIONE_MONETA_3_Y);
+			}
 
 			// Cambio la bitmap
 			mappaSelezionata = mappaTre;
@@ -495,37 +541,45 @@ public class Gioco extends BorderPane{
 			personaggio1.setY(posizioneYPersonaggio);
 		}
 		
-		if(personaggio1.intersects(boundMonetaUno)) {
+		if(monetaPresente[0] && boundPersonaggio.intersects(boundMonetaUno)) {
 			monetaPresente[0] = false;
-			areaDiGioco.getChildren().remove(obbiettivo1);
-			areaDiGioco.getChildren().remove(hitBoxObbiettivoUno);
+			areaDiGioco.getChildren().remove(moneta1);
 			System.out.println("moneta raccolta");
-			condizioneVittoria++;
-			System.out.println(condizioneVittoria);
+			moneteRaccolte++;
+			System.out.println(moneteRaccolte);
+			vittoria();
 		}
-		if(personaggio1.intersects(boundMonetaDue)) {
+		if(monetaPresente[1] && boundPersonaggio.intersects(boundMonetaDue)) {
 			monetaPresente[1] = false;
-			areaDiGioco.getChildren().remove(obbiettivo1);
+			areaDiGioco.getChildren().remove(moneta2);
 			System.out.println("moneta raccolta");
-			condizioneVittoria++;
+			moneteRaccolte++;
+			System.out.println(moneteRaccolte);
+			vittoria();
 		}
-		if(personaggio1.intersects(boundMonetaTre)) {
+		if(monetaPresente[2] && boundPersonaggio.intersects(boundMonetaTre)) {
 			monetaPresente[2] = false;
-			areaDiGioco.getChildren().remove(obbiettivo1);
+			areaDiGioco.getChildren().remove(moneta3);
 			System.out.println("moneta raccolta");
-			condizioneVittoria++;
+			moneteRaccolte++;
+			System.out.println(moneteRaccolte);
+			vittoria();
 		}
-		if(personaggio1.intersects(boundMonetaQuattro)) {
+		if(monetaPresente[3] && boundPersonaggio.intersects(boundMonetaQuattro)) {
 			monetaPresente[3] = false;
-			areaDiGioco.getChildren().remove(obbiettivo1);
+			areaDiGioco.getChildren().remove(moneta4); 
 			System.out.println("moneta raccolta");
-			condizioneVittoria++;
+			moneteRaccolte++;
+			System.out.println(moneteRaccolte);
+			vittoria();
 		}
-		if(personaggio1.intersects(boundMonetaCinque)) {
+		if(monetaPresente[4] && boundPersonaggio.intersects(boundMonetaCinque)) {
 			monetaPresente[4] = false;
-			areaDiGioco.getChildren().remove(obbiettivo1);
+			areaDiGioco.getChildren().remove(moneta5);
 			System.out.println("moneta raccolta");
-			condizioneVittoria++;
+			moneteRaccolte++;
+			System.out.println(moneteRaccolte);
+			vittoria();
 		}
 	}
 }
