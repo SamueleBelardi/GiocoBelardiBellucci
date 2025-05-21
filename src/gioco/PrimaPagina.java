@@ -60,7 +60,7 @@ public class PrimaPagina extends Application {
 	}
 	
 	public void fineGioco() {
-		Fine fine = new Fine();
+		Fine fine = new Fine(this, primaryStage);
     	fine.sfondo();
     	Scene fineScene = new Scene(fine);
     	System.out.println(this.primaryStage);
