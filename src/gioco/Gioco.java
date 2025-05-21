@@ -19,6 +19,12 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 public class Gioco extends BorderPane{
+	
+	PrimaPagina p;
+	public Gioco (PrimaPagina p) {
+		super();
+		this.p = p;
+	}
 
 	// bitmap, servono per vedere se il personaggio puo camminare o no su un determinato riquadro
 	Mappa mappaUno = new Mappa("ScenarioUno.txt");
@@ -75,13 +81,13 @@ public class Gioco extends BorderPane{
 	static final double POSIZIONE_HITBOX_CINQUE_TO_TRE_Y = 0;
 	
 	//posizione monete X
-	static final double POSIZIONE_MONETA_1_X = 90;
+	static final double POSIZIONE_MONETA_1_X = 180;
 	static final double POSIZIONE_MONETA_2_X = 120;
 	static final double POSIZIONE_MONETA_3_X = 160;
 	static final double POSIZIONE_MONETA_4_X = 50;
 	static final double POSIZIONE_MONETA_5_X = 112;
 	// posizioni Y
-	static final double POSIZIONE_MONETA_1_Y = 100;
+	static final double POSIZIONE_MONETA_1_Y = 200;
 	static final double POSIZIONE_MONETA_2_Y= 120;
 	static final double POSIZIONE_MONETA_3_Y = 160;
 	static final double POSIZIONE_MONETA_4_Y = 130;
@@ -131,7 +137,7 @@ public class Gioco extends BorderPane{
 	ImageView moneta5 = new ImageView(moneta);
 	
 	String movimentoAttuale = ""; // Variabile per capire la direzione in cui sta andando il personaggio
-	int moneteRaccolte = 0; // condizione vittoria
+	int moneteRaccolte = 4; // condizione vittoria
 	Pane areaDiGioco = new Pane(); // pane in cui si aggiungono gli scenari, personaggio, ecc
 	Label eMoneteRaccolte = new Label("monete raccolte: "+moneteRaccolte);
 	
@@ -181,11 +187,25 @@ public class Gioco extends BorderPane{
 	
 	public boolean vittoria() {
 		if(moneteRaccolte == 5) {
-			System.out.println("hai finito il gioco complimenti");
+			
+			int durataTimer = 10;
+			
+			Timeline timelineFineGioco = new Timeline(new KeyFrame(
+					Duration.seconds(1), 
+					x -> timer()));
+			timelineFineGioco.setCycleCount(1);
+			timelineFineGioco.play();
+		
+			
 			return true;
 		} else {
 			return false;
 		}
+	}
+
+	private void timer() {
+		System.out.println("hai finito il gioco complimenti");
+		p.fineGioco();
 	}
 
 	// metodo che quando rilascio il tasto imposta l'immagine del personaggio a fermo
@@ -263,7 +283,7 @@ public class Gioco extends BorderPane{
 
 		// assegno ad una variabile il valore presenta in quella detereminata posizione della bitmap
 		char cella = mappaSelezionata.getMappa()[riga][colonna];
-		System.out.println("Cella [" + riga + "]" + "[" + colonna + "]" + cella);
+		//System.out.println("Cella [" + riga + "]" + "[" + colonna + "]" + cella);
 		return cella == '1'; // ritorno true se cella è uguale a 1
 	}
 

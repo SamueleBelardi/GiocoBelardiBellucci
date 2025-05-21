@@ -11,14 +11,20 @@ import javafx.stage.Stage;
 
 public class PrimaPagina extends Application {
 	
+	Gioco mappa;
+	Stage primaryStage;
+	
 	public void start(Stage primaryStage) throws Exception {
+		
+		mappa = new Gioco(this);
 
-		// I0mmagine copertina
+		this.primaryStage = primaryStage;
+		System.out.println(this.primaryStage);
+		
+		// Immagine copertina
 		Image c = new Image(getClass().getResourceAsStream("Copertina.jpeg"));
 	    ImageView copertina = new ImageView(c);
 	   
-	    Gioco mappa = new Gioco();
-	    
         // Pulsante inizio Gioco
         Button inizio = new Button();
         inizio.setStyle("-fx-background-color: transparent;");
@@ -42,13 +48,6 @@ public class PrimaPagina extends Application {
              giocoScene.getRoot().requestFocus(); // necessario per ricevere gli eventi da tastiera
         });  
         
-        if(mappa.vittoria()) {
-        	Fine fine = new Fine();
-        	fine.sfondo();
-        	Scene fineScene = new Scene(fine);
-        	primaryStage.setScene(fineScene);
-        }
-       
         // StackPane iniziale
         StackPane sfondo = new StackPane(copertina, inizio);
         inizio.setTranslateX(350);
@@ -58,6 +57,14 @@ public class PrimaPagina extends Application {
 		primaryStage.setTitle("PrimaPagina");
 		primaryStage.setScene(scene);
 		primaryStage.show();
+	}
+	
+	public void fineGioco() {
+		Fine fine = new Fine();
+    	fine.sfondo();
+    	Scene fineScene = new Scene(fine);
+    	System.out.println(this.primaryStage);
+		primaryStage.setScene(fineScene);
 	}
 	
 	public static void main(String[] args) {
