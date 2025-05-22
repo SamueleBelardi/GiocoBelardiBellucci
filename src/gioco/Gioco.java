@@ -34,7 +34,7 @@ public class Gioco extends Application{
 	Mappa mappaCinque = new Mappa("ScenarioCinque.txt");
 	Mappa mappaSelezionata = mappaUno;
 	
-	double movimento = 2; 
+	double movimento = 3; 
 	double posizioneXPersonaggio = 180; // posizione X personaggio nella mappa
 	double posizioneYPersonaggio = 180; // posizione Y personaggio nella mappa
 	static final double DIMENSIONE_X = 320; // dimensione X della mappa
@@ -236,6 +236,7 @@ public class Gioco extends Application{
 		        hitBoxMappaTreToQuattro.setX(0);
 		        hitBoxMappaTreToQuattro.setY(140);
 		        hitBoxMappaTreToQuattro.setFill(Color.RED);
+		        
 		        
 		        // Posizione hitbox per il passaggio a mappCinque
 		        hitBoxMappaTreToCinque.setX(96);
