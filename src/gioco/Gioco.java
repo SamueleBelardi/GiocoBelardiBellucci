@@ -9,6 +9,9 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.media.AudioClip;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
@@ -126,9 +129,13 @@ public class Gioco extends BorderPane{
 	Pane areaDiGioco = new Pane(); 
 	Label eMoneteRaccolte = new Label("monete raccolte: "+moneteRaccolte);
 	
-	
-
 	public void inizio() {
+		
+		String path = getClass().getResource("sottofondo.mp3").toExternalForm();
+		Media media = new Media(path);
+		MediaPlayer mediaPlayer = new MediaPlayer(media);
+		mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
+		mediaPlayer.play();
 
 		areaDiGioco.getChildren().add(q1);
 		areaDiGioco.getChildren().add(personaggio1);
@@ -279,6 +286,8 @@ public class Gioco extends BorderPane{
 		Bounds boundMonetaTre = moneta3.getBoundsInParent();
 		Bounds boundMonetaQuattro = moneta4.getBoundsInParent();
 		Bounds boundMonetaCinque = moneta5.getBoundsInParent();
+		
+		AudioClip sound = new AudioClip(getClass().getResource("suonoMonete.mp3").toExternalForm());
 		
 		// Da mappaUno a mappaDue
 		if (boundPersonaggio.intersects(boundMappaUnoToDue)) {
@@ -569,30 +578,35 @@ public class Gioco extends BorderPane{
 		// controlla anche se il gioco e finito chiamando il metodo vittoria
 		if(monetaPresente[0] && boundPersonaggio.intersects(boundMonetaUno)) {
 			monetaPresente[0] = false;
+			sound.play();
 			areaDiGioco.getChildren().remove(moneta1);
 			moneteRaccolte++;
 			vittoria();
 		}
 		if(monetaPresente[1] && boundPersonaggio.intersects(boundMonetaDue)) {
 			monetaPresente[1] = false;
+			sound.play();
 			areaDiGioco.getChildren().remove(moneta2);		
 			moneteRaccolte++;
 			vittoria();
 		}
 		if(monetaPresente[2] && boundPersonaggio.intersects(boundMonetaTre)) {
 			monetaPresente[2] = false;
+			sound.play();
 			areaDiGioco.getChildren().remove(moneta3);
 			moneteRaccolte++;
 			vittoria();
 		}
 		if(monetaPresente[3] && boundPersonaggio.intersects(boundMonetaQuattro)) {
 			monetaPresente[3] = false;
+			sound.play();
 			areaDiGioco.getChildren().remove(moneta4); 
 			moneteRaccolte++;
 			vittoria();
 		}
 		if(monetaPresente[4] && boundPersonaggio.intersects(boundMonetaCinque)) {
 			monetaPresente[4] = false;
+			sound.play();
 			areaDiGioco.getChildren().remove(moneta5);
 			moneteRaccolte++;
 			vittoria();

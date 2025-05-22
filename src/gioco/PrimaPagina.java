@@ -1,12 +1,13 @@
 package gioco;
 
-
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
 
 public class PrimaPagina extends Application {
@@ -16,8 +17,13 @@ public class PrimaPagina extends Application {
 	
 	public void start(Stage primaryStage) throws Exception {
 		
+		String path = getClass().getResource("sottofondo.mp3").toExternalForm();
+		Media media = new Media(path);
+		MediaPlayer mediaPlayer = new MediaPlayer(media);
+		mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
+		mediaPlayer.play();
+		
 		mappa = new Gioco(this);
-
 		this.primaryStage = primaryStage;
 		System.out.println(this.primaryStage);
 		

@@ -5,6 +5,8 @@ import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
 
 public class Fine extends StackPane {
@@ -19,6 +21,12 @@ public class Fine extends StackPane {
    }
 	
     public void sfondo() {
+    	
+    	String path = getClass().getResource("sottofondo.mp3").toExternalForm();
+		Media media = new Media(path);
+		MediaPlayer mediaPlayer = new MediaPlayer(media);
+		mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
+		mediaPlayer.play();
     	
     	// Immagine fine gioco
         Image f = new Image(getClass().getResourceAsStream("Fine.png"));
