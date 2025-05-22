@@ -63,7 +63,6 @@ public class PrimaPagina extends Application {
 		Fine fine = new Fine(this, primaryStage);
     	fine.sfondo();
     	Scene fineScene = new Scene(fine);
-    	System.out.println(this.primaryStage);
 		primaryStage.setScene(fineScene);
 	}
 	

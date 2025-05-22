@@ -2,23 +2,19 @@ package gioco;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
-import javafx.application.Application;
-import javafx.geometry.BoundingBox;
 import javafx.geometry.Bounds;
-import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import javafx.stage.Stage;
 import javafx.util.Duration;
 
 public class Gioco extends BorderPane{
+	
 	
 	PrimaPagina p;
 	public Gioco (PrimaPagina p) {
@@ -34,17 +30,16 @@ public class Gioco extends BorderPane{
 	Mappa mappaCinque = new Mappa("ScenarioCinque.txt");
 	Mappa mappaSelezionata = mappaUno;
 
-	double movimento = 3; // unita dello spostamento del personaggio 
+	double movimento = 2; // unita dello spostamento del personaggio 
 	double posizioneXPersonaggio = 180; // posizione X personaggio nella mappa
 	double posizioneYPersonaggio = 180; // posizione Y personaggio nella mappa
 	static final double DIMENSIONE_X = 320; // dimensione X della mappa
 	static final double DIMENSIONE_Y = 320; // dimensione Y della mappa
 	static final double DIMENSIONE_X_PERSONAGGIO = 16; // numero di pixel X (grandezza) del personaggio
 	static final double DIMENSIONE_Y_PERSONAGGIO = 32; // numero di pixel Y (grandezza) del personaggio
-	static final double DIMENSIONE_X_MAPPA = 320; // numero di pixel X (grandezza) del personaggio
-	static final double DIMENSIONE_Y_MAPPA = 320; // numero di pixel Y (grandezza) del personaggio
+	static final double DIMENSIONE_X_MAPPA = 320; 
+	static final double DIMENSIONE_Y_MAPPA = 320; 
 
-	// hitbox per cambio mappa 
 	Rectangle hitBoxMappaUnoToDue = new Rectangle(16, 16);
 	Rectangle  hitBoxMappaDueToUno = new Rectangle(16, 16);
 	Rectangle hitBoxMappaDueToTre = new Rectangle(48, 16);
@@ -53,15 +48,12 @@ public class Gioco extends BorderPane{
 	Rectangle  hitBoxMappaTreToCinque = new Rectangle(48, 16);
 	Rectangle  hitBoxMappaQuattroToTre = new Rectangle(16,32);
 	Rectangle  hitBoxMappaCinqueToTre = new Rectangle(48, 16); 
-	
-	// hitbox monete
 	Rectangle  hitBoxObbiettivoUno = new Rectangle(16, 16); 
 	Rectangle  hitBoxObbiettivoDue = new Rectangle(16, 16); 
 	Rectangle  hitBoxObbiettivoTre = new Rectangle(16, 16); 
 	Rectangle  hitBoxObbiettivoQuattro = new Rectangle(16, 16); 
 	Rectangle  hitBoxObbiettivoCinque = new Rectangle(16, 16);  
 	
-	// posizioni hitbox cambiMappa X
 	static final double POSIZIONE_HITBOX_UNO_TO_DUE_X = 192;
 	static final double POSIZIONE_HITBOX_DUE_TO_UNO_X = 192;
 	static final double POSIZIONE_HITBOX_DUE_TO_TRE_X = 16;
@@ -70,7 +62,6 @@ public class Gioco extends BorderPane{
 	static final double POSIZIONE_HITBOX_TRE_TO_CINQUE_X = 96;
 	static final double POSIZIONE_HITBOX_QUATTRO_TO_TRE_X = 304;
 	static final double POSIZIONE_HITBOX_CINQUE_TO_TRE_X = 112;
-	// posizioni Y
 	static final double POSIZIONE_HITBOX_UNO_TO_DUE_Y = 304;
 	static final double POSIZIONE_HITBOX_DUE_TO_UNO_Y = 0;
 	static final double POSIZIONE_HITBOX_DUE_TO_TRE_Y = 304;
@@ -79,31 +70,25 @@ public class Gioco extends BorderPane{
 	static final double POSIZIONE_HITBOX_TRE_TO_CINQUE_Y = 304;
 	static final double POSIZIONE_HITBOX_QUATTRO_TO_TRE_Y = 128;
 	static final double POSIZIONE_HITBOX_CINQUE_TO_TRE_Y = 0;
-	
-	//posizione monete X
-	static final double POSIZIONE_MONETA_1_X = 180;
-	static final double POSIZIONE_MONETA_2_X = 120;
-	static final double POSIZIONE_MONETA_3_X = 160;
+	static final double POSIZIONE_MONETA_1_X = 90;
+	static final double POSIZIONE_MONETA_2_X = 20;
+	static final double POSIZIONE_MONETA_3_X = 140;
 	static final double POSIZIONE_MONETA_4_X = 50;
-	static final double POSIZIONE_MONETA_5_X = 112;
-	// posizioni Y
-	static final double POSIZIONE_MONETA_1_Y = 200;
+	static final double POSIZIONE_MONETA_5_X = 60;
+	static final double POSIZIONE_MONETA_1_Y = 100;
 	static final double POSIZIONE_MONETA_2_Y= 120;
-	static final double POSIZIONE_MONETA_3_Y = 160;
+	static final double POSIZIONE_MONETA_3_Y = 150;
 	static final double POSIZIONE_MONETA_4_Y = 130;
-	static final double POSIZIONE_MONETA_5_Y = 120;
+	static final double POSIZIONE_MONETA_5_Y = 240;
 		
 	// vettore che controlla se una moneta e stata mangiata
 	boolean [] monetaPresente = { true, true, true, true, true} ;
 
-	// immagini degli scenari
 	Image scenarioUno = new Image(getClass().getResourceAsStream("ScenarioUno.png"));
 	Image scenarioDue = new Image(getClass().getResourceAsStream("ScenarioDue.png"));
 	Image scenarioTre = new Image(getClass().getResourceAsStream("ScenarioTre.png"));
 	Image scenarioQuattro = new Image(getClass().getResourceAsStream("ScenarioQuattro.png"));
 	Image scenarioCinque = new Image(getClass().getResourceAsStream("ScenarioCinque.png"));
-
-	// immagini del personaggio quando è in movimento o fermo
 	Image fermoGiu = new Image(getClass().getResourceAsStream("fermoGiu.png"));
 	Image movimentoGiu = new Image(getClass().getResourceAsStream("movimentoGiu.png"));
 	Image fermoDestra = new Image(getClass().getResourceAsStream("fermoDestra.png"));
@@ -114,7 +99,7 @@ public class Gioco extends BorderPane{
 	Image movimentoSinistra = new Image(getClass().getResourceAsStream("movimentoSinistra.png"));
 	Image moneta = new Image(getClass().getResourceAsStream("moneta.gif"));
 
-	//vettori di immagini
+	//vettori di immagini per permettere l'animazione
 	Image [] sequenzaGiu = new Image[1000];
 	Image [] sequenzaDestra = new Image[1000];
 	Image [] sequenzaSu = new Image[1000];
@@ -138,14 +123,13 @@ public class Gioco extends BorderPane{
 	
 	String movimentoAttuale = ""; // Variabile per capire la direzione in cui sta andando il personaggio
 	int moneteRaccolte = 0; // condizione vittoria
-	Pane areaDiGioco = new Pane(); // pane in cui si aggiungono gli scenari, personaggio, ecc
+	Pane areaDiGioco = new Pane(); 
 	Label eMoneteRaccolte = new Label("monete raccolte: "+moneteRaccolte);
 	
 	
 
 	public void inizio() {
 
-		// aggiunta degli elementi al pane
 		areaDiGioco.getChildren().add(q1);
 		areaDiGioco.getChildren().add(personaggio1);
 		personaggio1.setX(posizioneXPersonaggio);
@@ -196,6 +180,7 @@ public class Gioco extends BorderPane{
 		}
 	}
 
+	// metodo che quando finisce il timer apre la schermata finale del gioco
 	private void timer() {
 		System.out.println("hai finito il gioco complimenti");
 		p.fineGioco();
@@ -220,12 +205,11 @@ public class Gioco extends BorderPane{
 
 		// controlla se è presente qualcosa quindi se il personaggio e fermo o in movimento
 		if (!movimentoAttuale.isEmpty()) {
-			int immagine = 0;
 		    switch (movimentoAttuale) { // alterna l'immagine in movimento o fermo in movimento grazie al calcolo del numero se e pari o dispari
-		        case "w" -> personaggio1.setImage(sequenzaSu[immagine = contatoreSu++ % 2]);
-		        case "s" -> personaggio1.setImage(sequenzaGiu[immagine = contatoreGiu++ % 2]);
-		        case "a" -> personaggio1.setImage(sequenzaSinistra[immagine = contatoreSinistra++ % 2]);
-		        case "d" -> personaggio1.setImage(sequenzaDestra[immagine = contatoreDestra++ % 2]);
+		        case "w" -> personaggio1.setImage(sequenzaSu[contatoreSu++ % 2]);
+		        case "s" -> personaggio1.setImage(sequenzaGiu[contatoreGiu++ % 2]);
+		        case "a" -> personaggio1.setImage(sequenzaSinistra[contatoreSinistra++ % 2]);
+		        case "d" -> personaggio1.setImage(sequenzaDestra[contatoreDestra++ % 2]);
 		    }
 		} 	
 	}
@@ -272,17 +256,15 @@ public class Gioco extends BorderPane{
 	public boolean puoMuoversi (double dimensioneX, double dimensioneY) {
 		// calcolo posizione del personaggio nella bitmap
 		int colonna = (int)(posizioneXPersonaggio / 16);
-		int riga = (int)(posizioneYPersonaggio / 16)+1 ; // quel +1 sta li perché senno non funziona non so manco io perche serve
+		int riga = (int)(posizioneYPersonaggio / 16)+1 ;
 
 		// assegno ad una variabile il valore presenta in quella detereminata posizione della bitmap
 		char cella = mappaSelezionata.getMappa()[riga][colonna];
-		//System.out.println("Cella [" + riga + "]" + "[" + colonna + "]" + cella);
 		return cella == '1'; // ritorno true se cella è uguale a 1
 	}
 
 	public void cambioMappa () {
 
-		// boundingbox per controllo collisioni cambiomappa
 		Bounds boundPersonaggio = personaggio1.getBoundsInParent();
 		Bounds boundMappaUnoToDue = hitBoxMappaUnoToDue.getBoundsInParent();
 		Bounds boundMappaDueToUno = hitBoxMappaDueToUno.getBoundsInParent();
@@ -292,8 +274,6 @@ public class Gioco extends BorderPane{
 		Bounds boundMappaTreToCinque = hitBoxMappaTreToCinque.getBoundsInParent();
 		Bounds boundMappaQuattroToTre = hitBoxMappaQuattroToTre.getBoundsInParent();
 		Bounds boundMappaCinqueToTre = hitBoxMappaCinqueToTre.getBoundsInParent();	
-		
-		// controllo monete
 		Bounds boundMonetaUno = moneta1.getBoundsInParent();
 		Bounds boundMonetaDue = moneta2.getBoundsInParent();
 		Bounds boundMonetaTre = moneta3.getBoundsInParent();
@@ -585,7 +565,8 @@ public class Gioco extends BorderPane{
 			personaggio1.setY(posizioneYPersonaggio);
 		}
 		
-		// metodi che controllano quando il personaggio raccoglie una moneta
+		// metodi che controllano quando il personaggio raccoglie una moneta 
+		// controlla anche se il gioco e finito chiamando il metodo vittoria
 		if(monetaPresente[0] && boundPersonaggio.intersects(boundMonetaUno)) {
 			monetaPresente[0] = false;
 			areaDiGioco.getChildren().remove(moneta1);
@@ -617,6 +598,7 @@ public class Gioco extends BorderPane{
 			vittoria();
 		}
 		
+		// aggiorno le monete raccolte
 		eMoneteRaccolte.setText("monete raccolte: " + moneteRaccolte);
 	}
 }

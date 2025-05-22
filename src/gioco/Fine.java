@@ -24,27 +24,30 @@ public class Fine extends StackPane {
         Image f = new Image(getClass().getResourceAsStream("Fine.png"));
         ImageView fine = new ImageView(f);
         
+        // bottone che permette di rigiocare da capo
         Button rigioca = new Button();
-        rigioca.setStyle("-fx-background-color: red;");
+        rigioca.setStyle("-fx-background-color: transparent;");
         rigioca.setPrefSize(200, 100);
         rigioca.setTranslateX(-250);
         rigioca.setTranslateY(440);
         
         rigioca.setOnAction( e -> {
+        	// ricrea un'istanza di gioco per rigioare nuovamente
         	Gioco mappa = new Gioco(p);
-        	 mappa.inizio();
-             Scene giocoScene = new Scene(mappa, 320, 336); 
-             
-             giocoScene.setOnKeyPressed(event -> {
-                 mappa.tastoPremuto(event);
-             });
-             
-             giocoScene.setOnKeyReleased(event -> {
-                 mappa.tastoRilasciato(event);
-             });
-             
-             primaryStage.setScene(giocoScene);
-             giocoScene.getRoot().requestFocus(); // necessario per ricevere gli eventi da tastiera
+        	mappa.inizio();
+        	Scene giocoScene = new Scene(mappa, 320, 336); 
+
+        	// servono per far camminare il personaggio
+        	giocoScene.setOnKeyPressed(event -> {
+        		mappa.tastoPremuto(event);
+        	});
+
+        	giocoScene.setOnKeyReleased(event -> {
+        		mappa.tastoRilasciato(event);
+        	});
+
+        	primaryStage.setScene(giocoScene);
+        	giocoScene.getRoot().requestFocus(); // necessario per ricevere gli eventi da tastiera
         });
         
     	this.getChildren().add(fine);
